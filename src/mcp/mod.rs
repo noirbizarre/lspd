@@ -35,7 +35,11 @@ pub struct ProjectdServer {
 
 #[tool_router]
 impl ProjectdServer {
-    fn new(root: ProjectRoot) -> Self {
+    /// Builds a server scoped to `root`. Public so integration tests can
+    /// serve it over an in-memory transport rather than only via
+    /// [`serve`]'s real stdio.
+    #[must_use]
+    pub fn new(root: ProjectRoot) -> Self {
         Self {
             root,
             tool_router: Self::tool_router(),

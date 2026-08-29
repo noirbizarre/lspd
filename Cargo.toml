@@ -133,3 +133,7 @@ tempfile = "3"
 insta = { version = "1", features = ["filters"] }
 rstest = "0.26"
 pretty_assertions = "1"
+# The MCP integration tests act as an MCP client over an in-memory duplex
+# transport, which needs rmcp's "client" feature (not needed by the binary
+# itself, which is only ever an MCP server).
+rmcp = { version = "3", features = ["client"] }
