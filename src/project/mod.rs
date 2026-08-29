@@ -28,7 +28,8 @@ const ROOT_MARKERS: &[&str] = &[".git", "projectd.toml"];
 pub struct ProjectRoot(PathBuf);
 
 impl ProjectRoot {
-    /// Walks upward from `start` looking for [`ROOT_MARKERS`]. Falls back to
+    /// Walks upward from `start` looking for a root marker (`.git` or
+    /// `projectd.toml`). Falls back to
     /// `start` itself (canonicalized) if none is found — ProjectD must work
     /// with zero configuration and no VCS, per the spec, so "no marker
     /// found" is not an error, just a smaller-scoped root.

@@ -122,7 +122,8 @@ impl From<LifecyclePatch> for Lifecycle {
 }
 
 /// One `[lsp.<name>]` table as parsed from a single configuration layer.
-/// `name` itself is the map key in [`super::Config`], not a field here.
+/// `name` itself is the map key in [`super::layer::ConfigPatch::lsp`], not a
+/// field here.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct LspDefinitionPatch {
     /// The executable to run, and optionally its leading arguments.

@@ -30,8 +30,8 @@ pub enum EventKind {
 }
 
 /// One `[[watch]]` entry as parsed from a single layer, before merging.
-/// `name` is not itself a field — see [`super::layer::load_watch_rules`]
-/// for how the spec's `[[watch]]` array is re-keyed by `name` at load time.
+/// `name` is not itself a field — see [`super::layer::load`] for how the
+/// spec's `[[watch]]` array is re-keyed by `name` at load time.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct WatchRulePatch {
     /// Glob patterns (relative to the project root) this rule applies to.

@@ -95,7 +95,8 @@ pub struct Watcher {
 }
 
 impl Watcher {
-    /// Starts watching `root` recursively, applying [`DEFAULT_IGNORE`].
+    /// Starts watching `root` recursively, applying the default ignore list
+    /// (`.git`, `target`, `node_modules`, and similar).
     /// Events are normalized and pushed onto an internal
     /// [`broadcast`] channel; [`Self::subscribe`] hands out receivers.
     pub fn start(root: &Path) -> crate::Result<Self> {
