@@ -11,25 +11,14 @@
 #![allow(clippy::result_large_err)]
 #![warn(missing_docs)]
 
+pub mod client;
+pub mod config;
+pub mod daemon;
 pub mod error;
+pub mod mcp;
+pub mod mise;
+pub mod output;
+pub mod project;
+pub mod templating;
 
 pub use error::{Error, Result};
-
-/// Run the thing.
-///
-/// # Errors
-///
-/// Returns [`Error`] when there is nothing to do.
-pub fn run() -> Result<()> {
-    Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn running_with_nothing_to_do_succeeds() {
-        assert!(run().is_ok());
-    }
-}

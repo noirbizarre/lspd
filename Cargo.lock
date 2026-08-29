@@ -1089,6 +1089,7 @@ dependencies = [
  "directories",
  "globset",
  "insta",
+ "libc",
  "lsp-types",
  "miette",
  "minijinja",
@@ -1098,6 +1099,7 @@ dependencies = [
  "pretty_assertions",
  "rmcp",
  "rstest",
+ "schemars",
  "serde",
  "serde_json",
  "sha2",
@@ -1825,6 +1827,7 @@ checksum = "b5772d71c9be8a8a6ac2117d949c5b224c1b72241bb611d9a3012edcf8af7812"
 dependencies = [
  "getrandom 0.4.3",
  "js-sys",
+ "serde_core",
  "wasm-bindgen",
 ]
 

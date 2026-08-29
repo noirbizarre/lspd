@@ -103,6 +103,9 @@ lsp-types = "0.97"
 
 # The official Model Context Protocol Rust SDK, used for `projectd mcp serve`.
 rmcp = { version = "3", features = ["server", "macros", "transport-io"] }
+# MCP tool argument/result schemas — the same version rmcp itself pulls in,
+# declared directly since `mcp::tools` derives `JsonSchema` on its own types.
+schemars = "1"
 
 # Structured logging for a long-lived daemon juggling multiple LSP
 # subprocesses and client connections concurrently.
@@ -110,7 +113,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 
 # Per-daemon-instance identity, exchanged in the handshake.
-uuid = { version = "1", features = ["v4"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 
 # Deterministic Unix socket path derivation from a canonical project root
 # (see docs/adr/0004-deterministic-socket-discovery.md) — discovery is a
@@ -118,6 +121,10 @@ uuid = { version = "1", features = ["v4"] }
 sha2 = "0.10"
 
 async-trait = "0.1"
+
+# `getuid`, for the /tmp fallback runtime directory when $XDG_RUNTIME_DIR is
+# unset (Unix-only build, see docs/adr/0003-unix-only-platform-scope.md).
+libc = "0.2"
 
 [dev-dependencies]
 assert_cmd = "2"

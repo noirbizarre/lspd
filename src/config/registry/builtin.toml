@@ -1,0 +1,36 @@
+# ProjectD's built-in LSP registry (spec §8).
+#
+# This is a configuration layer like any other — it parses through the exact
+# same `LspDefinitionPatch` type as `projectd.toml` — just the one loaded
+# first, so every other layer can override any field of any entry here
+# without redeclaring the rest. `auto_enable = true` marks entries that
+# activate automatically for a zero-config project whose detected type
+# intersects `languages` (see `config::activation`); it is not itself an LSP
+# concept, so it lives only in this file's own idiom, not in `lsp-types`.
+#
+# Keep entries alphabetically ordered by name — this file is meant to be read.
+
+[lsp.gopls]
+command = ["gopls"]
+languages = ["go"]
+auto_enable = true
+
+[lsp.pyright]
+command = ["pyright-langserver", "--stdio"]
+languages = ["python"]
+auto_enable = true
+
+[lsp.rust-analyzer]
+command = ["rust-analyzer"]
+languages = ["rust"]
+auto_enable = true
+
+[lsp.ruff]
+command = ["ruff", "server"]
+languages = ["python"]
+auto_enable = true
+
+[lsp.typescript]
+command = ["typescript-language-server", "--stdio"]
+languages = ["typescript", "javascript"]
+auto_enable = true
