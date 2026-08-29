@@ -21,8 +21,23 @@ Copyright &copy; 2026 Axel H. — MIT licensed
 # meaningfully conflict with additions here.
 nav = [
   { "Home" = "index.md" },
+  { "Architecture" = "architecture.md" },
+  { "Configuration" = "configuration.md" },
+  { "LSP" = "lsp.md" },
+  { "Events and watch rules" = "events.md" },
+  { "Protocol" = "protocol.md" },
+  { "MCP" = "mcp.md" },
   { "About" = [
     { "Architecture Decisions" = "adr/README.md" },
+    { "ADR-0001: definitions vs activation" = "adr/0001-lsp-definitions-vs-activation.md" },
+    { "ADR-0002: config layering and merge semantics" = "adr/0002-config-layering-and-merge-semantics.md" },
+    { "ADR-0003: Unix-only platform scope" = "adr/0003-unix-only-platform-scope.md" },
+    { "ADR-0004: deterministic socket discovery" = "adr/0004-deterministic-socket-discovery.md" },
+    { "ADR-0005: single exclusive LSP proxy client" = "adr/0005-single-exclusive-lsp-proxy-client.md" },
+    { "ADR-0006: server-side template resolution" = "adr/0006-server-side-template-resolution.md" },
+    { "ADR-0007: Mise as a pluggable environment provider" = "adr/0007-mise-as-pluggable-environment-provider.md" },
+    { "ADR-0008: event stream independent of watch rules" = "adr/0008-event-stream-independent-of-watch-rules.md" },
+    { "ADR-0009: single crate structure" = "adr/0009-single-crate-structure.md" },
   ] },
 ]
 

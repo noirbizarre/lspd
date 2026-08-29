@@ -22,19 +22,39 @@
 
 ---
 
-<!-- One paragraph: what this does and why it exists. Lead with the problem, -->
-<!-- not the implementation. -->
+Editors, terminal tools, and AI coding agents each independently reimplement
+the same project-scoped infrastructure — a language server per language, a
+filesystem watcher, a task runner integration. projectd centralizes that:
+one daemon per project, spawned on demand, sharing LSP servers, a filesystem
+event stream, and Mise-provided environments across every client that asks
+for them, over a Unix socket and a minimal [MCP](https://modelcontextprotocol.io)
+server for agents. It composes existing standards (LSP stays LSP, Mise stays
+the tool/environment provider) rather than replacing them.
 
 ## Installation
 
-Or download a binary for your platform from the
+Download a binary for your platform from the
 [latest release](https://github.com/noirbizarre/projectd/releases/latest).
 
 ## Usage
 
 ```bash
-projectd --help
+projectd project info              # detected project types, known/enabled LSPs
+projectd lsp list                  # every LSP definition and its activation state
+projectd lsp config pyright        # the fully resolved, template-rendered config
+projectd lsp ensure pyright        # start (or reuse) a running instance
+projectd lsp endpoint pyright      # the Unix socket for raw LSP stdio proxying
+projectd events --path '**/*.py'   # subscribe to the shared filesystem event stream
+projectd watch list                # configured watch rules and their state
+projectd task run test             # delegates to `mise run test`
+projectd mcp serve                 # a minimal MCP server for AI agents
 ```
+
+Every command accepts `--json` for machine-readable output and `--project
+<path>` to target a project other than the current directory. See the
+[documentation](https://noirbizarre.github.io/projectd/) for the
+configuration model (`projectd.toml`, `projectd.local.toml`), the built-in
+LSP registry, and the daemon protocol.
 
 ## Documentation
 

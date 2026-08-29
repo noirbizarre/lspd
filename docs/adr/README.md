@@ -21,4 +21,12 @@ by editing the old one. The history is the value.
 
 ## Index
 
-<!-- - [ADR-001](001-....md) — ... -->
+- [ADR-0001](0001-lsp-definitions-vs-activation.md) — LSP definitions are separate from LSP activation
+- [ADR-0002](0002-config-layering-and-merge-semantics.md) — Hand-rolled layered configuration with per-field merge rules
+- [ADR-0003](0003-unix-only-platform-scope.md) — Unix-only platform scope
+- [ADR-0004](0004-deterministic-socket-discovery.md) — Deterministic socket-path discovery, no registry
+- [ADR-0005](0005-single-exclusive-lsp-proxy-client.md) — One exclusive client per LSP proxy instance
+- [ADR-0006](0006-server-side-template-resolution.md) — projectd resolves templates; clients never do
+- [ADR-0007](0007-mise-as-pluggable-environment-provider.md) — Mise as a pluggable environment provider
+- [ADR-0008](0008-event-stream-independent-of-watch-rules.md) — The event stream is independent of watch rules
+- [ADR-0009](0009-single-crate-structure.md) — Single crate, not a Cargo workspace

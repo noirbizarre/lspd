@@ -1,0 +1,11 @@
+[[watch]]
+name = "frontend-tests"
+paths = ["frontend/**/*.ts"]
+events = ["file.modified"]
+command = ["mise", "run", "test:frontend"]
+
+[[watch]]
+name = "backend-tests"
+paths = ["backend/**/*.ts"]
+events = ["file.modified"]
+command = ["mise", "run", "test:backend"]

@@ -1,0 +1,5 @@
+[lsp.pyright.settings.python.analysis]
+extraPaths = ["{{ env.PROJECT_ROOT }}/src"]
+
+[lsp.pyright.environment]
+PYTHONPATH = "{{ env.PROJECT_ROOT }}/src"

@@ -1,0 +1,11 @@
+# Both are active simultaneously — this is the point, not a coincidence.
+[lsps]
+enabled = ["pyright", "ruff"]
+
+# Only overriding a setting: the built-in registry still supplies pyright's
+# `command`, since this table never mentions it.
+[lsp.pyright.settings.python.analysis]
+typeCheckingMode = "basic"
+
+# ruff's own configuration is untouched — the two definitions merge and
+# resolve completely independently.

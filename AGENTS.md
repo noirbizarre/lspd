@@ -6,24 +6,57 @@ Notes for anyone — human or otherwise — changing this repository.
 
 Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents
 
-<!-- Replace this with the one paragraph that, if someone read only it, would -->
-<!-- stop them proposing the wrong thing. Then list the invariants below.     -->
+projectd is a local daemon, spawned on demand per project, that shares LSP
+server processes, a filesystem event stream, and a Mise-resolved environment
+across every client that asks for them — an editor, a terminal tool, an AI
+agent — over a Unix socket and a minimal MCP server. It composes existing
+standards (LSP stays LSP, Mise stays the tool/environment provider) rather
+than replacing them. See `docs/architecture.md` and `docs/adr/` for why it
+is shaped the way it is before proposing a different shape.
 
 ## Non-negotiable invariants
 
 Each of these should be enforced by a hook or a test. An invariant nothing
 checks is a comment, and it will be violated.
 
-<!-- 1. **...** — enforced by `tests/....rs`. -->
+1. **LSP definitions and LSP activation merge independently.** A project can
+   override one definition's `settings` without touching which LSPs are
+   active, and change activation without redefining any LSP — enforced by
+   `config::tests::project_config_can_override_one_definition_without_touching_activation`
+   and `config::tests::local_config_can_change_activation_without_redefining_any_lsp`.
+2. **A language is never a service identity.** Multiple LSP definitions may
+   cover the same language and run simultaneously — enforced by
+   `config::tests::both_pyright_and_ruff_resolve_to_distinct_independently_configured_definitions`
+   and the built-in registry shipping two independent Python entries.
+3. **Every daemon `Response` variant must actually serialize.** An internally
+   tagged newtype variant wrapping a bare sequence compiles but panics at
+   runtime — this exact bug shipped once during development. Enforced by
+   `daemon::protocol::tests::every_response_variant_serializes_successfully`;
+   a round-trip test alone would not have caught it.
+4. **The control protocol's wire spelling matches the spec's `file.*`
+   convention**, not whatever `#[serde(rename_all = "snake_case")]` would
+   otherwise produce — enforced by
+   `daemon::events::tests::a_renamed_event_serializes_to_the_documented_file_dot_renamed_shape`
+   and `config::watch::tests::event_kind_parses_from_the_documented_file_dot_prefixed_spelling`.
+5. **Templates are resolved by projectd, never by a client.** `lsp config`'s
+   output never contains `{{ }}` syntax — enforced by
+   `config::tests::settings_templates_render_against_the_effective_environment`.
+6. **The library never imports `cli` or prints anything.** `commands/*` (the
+   binary crate) is the only place argument parsing meets engine calls.
 
 ## Layout
 
 ```
 src/
-├── lib.rs      the library surface
-├── main.rs     the projectd binary
-├── cli.rs      argument types only
-└── error.rs    the crate's error type
+├── lib.rs        the library surface: config, project, daemon, client, mcp, mise, templating
+├── main.rs       the projectd binary — thin: parse, dispatch, map exit code
+├── cli.rs        argument types only
+├── error.rs      the crate's error type
+├── config/       layered configuration, merge rules, the built-in registry
+├── daemon/       the control protocol, LSP lifecycle/proxy, fs events, watch rules
+├── project/      canonical root discovery, project-type detection
+├── mcp/          the MCP server, wrapping the same engine calls the CLI uses
+└── commands/     (binary crate) argument-to-engine-call translation, human/JSON output
 ```
 
 Dependencies point inward. Nothing in the library knows a command exists.

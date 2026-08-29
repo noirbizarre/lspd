@@ -1,0 +1,10 @@
+# Rename to `projectd.local.toml` (untracked, per the recommended
+# .gitignore entry) to try a local override: switching pyright out for
+# basedpyright without touching the committed `projectd.toml` at all.
+
+[lsps]
+enabled = ["basedpyright", "ruff"]
+
+[lsp.basedpyright]
+command = ["basedpyright-langserver", "--stdio"]
+languages = ["python"]
