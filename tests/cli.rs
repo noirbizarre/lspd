@@ -18,6 +18,31 @@ fn projectd() -> Command {
     Command::cargo_bin("projectd").expect("the projectd binary should build")
 }
 
+/// Tests that go through the real subprocess discover-or-start path leave a
+/// real detached daemon process running — nothing in the CLI itself ever
+/// tears one down, since a daemon's whole point is to outlive any single
+/// invocation. Tests must therefore clean up after themselves explicitly, or
+/// repeated local `cargo test` runs accumulate zombie daemons pointing at
+/// already-deleted temp directories.
+fn shutdown_daemon(project_root: &std::path::Path) {
+    use std::io::{Read, Write};
+    use std::os::unix::net::UnixStream;
+
+    let Ok(root) = projectd::project::ProjectRoot::discover(project_root) else {
+        return;
+    };
+    let socket_path = projectd::daemon::socket::control_socket_path(root.path());
+    let Ok(mut stream) = UnixStream::connect(&socket_path) else {
+        return;
+    };
+
+    let mut buf = [0u8; 4096];
+    let _ = stream.write_all(b"{\"type\":\"handshake\"}\n");
+    let _ = stream.read(&mut buf);
+    let _ = stream.write_all(b"{\"type\":\"shutdown\"}\n");
+    let _ = stream.read(&mut buf);
+}
+
 fn python_project() -> TempDir {
     let tmp = TempDir::new().unwrap();
     fs::write(tmp.path().join("pyproject.toml"), "").unwrap();
@@ -216,4 +241,6 @@ fn lsp_ensure_starts_a_real_detached_daemon_that_status_and_endpoint_then_reuse(
         .assert()
         .success()
         .stdout(predicate::str::contains("running"));
+
+    shutdown_daemon(tmp.path());
 }
