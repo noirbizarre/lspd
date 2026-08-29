@@ -65,13 +65,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # No Windows leg: the daemon binds `tokio::net::UnixListener`, which
+        # does not exist on that target, so the crate does not compile there
+        # at all. See docs/adr/0003-unix-only-platform-scope.md. This is a
+        # deliberate, permanent deviation from the template's default 3-OS
+        # matrix — `git tpl update` will keep re-adding Windows here, and the
+        # fix is to remove it again, not to make the crate build on it.
         os:
           - name: Linux
             runner: ubuntu-latest
             flag: linux
-          - name: Windows
-            runner: windows-latest
-            flag: windows
           - name: macOS
             runner: macos-latest
             flag: macos
