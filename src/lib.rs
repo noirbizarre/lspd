@@ -17,7 +17,6 @@ pub mod daemon;
 pub mod error;
 pub mod mcp;
 pub mod mise;
-pub mod output;
 pub mod project;
 pub mod templating;
 

@@ -47,7 +47,7 @@ pub fn list(ctx: &Context) -> projectd::Result<()> {
         .collect();
 
     if ctx.json {
-        projectd::output::print_ok(&summaries);
+        crate::output::print_ok(&summaries);
     } else if summaries.is_empty() {
         println!("(no LSP definitions known for this project)");
     } else {
@@ -70,7 +70,7 @@ pub fn config(ctx: &Context, name: &str) -> projectd::Result<()> {
     let resolved = config.resolve_lsp(name)?;
 
     if ctx.json {
-        projectd::output::print_ok(&resolved);
+        crate::output::print_ok(&resolved);
     } else {
         println!("name:    {}", resolved.name);
         println!("command: {}", resolved.command_line().join(" "));
@@ -112,7 +112,7 @@ pub async fn status(ctx: &Context, name: &str) -> projectd::Result<()> {
     match response {
         Response::LspStatus(info) => {
             if ctx.json {
-                projectd::output::print_ok(&info);
+                crate::output::print_ok(&info);
             } else {
                 println!("{}: {:?}", name, info.status);
             }
@@ -134,7 +134,7 @@ pub async fn ensure(ctx: &Context, name: &str) -> projectd::Result<()> {
     match response {
         Response::LspEnsured { name, status } => {
             if ctx.json {
-                projectd::output::print_ok(&status);
+                crate::output::print_ok(&status);
             } else {
                 println!("{name}: {:?}", status.status);
             }
@@ -156,7 +156,7 @@ pub async fn endpoint(ctx: &Context, name: &str) -> projectd::Result<()> {
     match response {
         Response::LspEndpoint { socket } => {
             if ctx.json {
-                projectd::output::print_ok(&serde_json::json!({ "socket": socket }));
+                crate::output::print_ok(&serde_json::json!({ "socket": socket }));
             } else {
                 println!("{}", socket.display());
             }

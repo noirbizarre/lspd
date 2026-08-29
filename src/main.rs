@@ -13,6 +13,7 @@ use clap::Parser;
 
 mod cli;
 mod commands;
+mod output;
 
 use cli::{Cli, Command, LspCommand, ProjectCommand, TaskCommand, WatchCommand};
 use commands::Context;
@@ -91,7 +92,7 @@ fn report_startup_error(json: bool, error: projectd::Error) {
         let code = miette::Diagnostic::code(&error)
             .map(|c| c.to_string())
             .unwrap_or_else(|| "projectd::error::unknown".to_string());
-        projectd::output::print_err(&code, &error.to_string());
+        crate::output::print_err(&code, &error.to_string());
     } else {
         eprintln!("{:?}", miette::Report::new(error));
     }

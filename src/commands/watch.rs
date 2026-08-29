@@ -13,7 +13,7 @@ pub async fn list(ctx: &Context) -> projectd::Result<()> {
     match response {
         Response::WatchList { rules } => {
             if ctx.json {
-                projectd::output::print_ok(&rules);
+                crate::output::print_ok(&rules);
             } else if rules.is_empty() {
                 println!("(no watch rules configured)");
             } else {
@@ -41,9 +41,7 @@ async fn set(ctx: &Context, name: &str, enabled: bool) -> projectd::Result<()> {
     match response {
         Response::Ack => {
             if ctx.json {
-                projectd::output::print_ok(
-                    &serde_json::json!({ "name": name, "enabled": enabled }),
-                );
+                crate::output::print_ok(&serde_json::json!({ "name": name, "enabled": enabled }));
             } else {
                 println!("{name}: {}", if enabled { "enabled" } else { "disabled" });
             }

@@ -43,7 +43,7 @@ pub async fn run(ctx: &Context) -> projectd::Result<()> {
     };
 
     if ctx.json {
-        projectd::output::print_ok(&report);
+        crate::output::print_ok(&report);
     } else {
         println!("root: {}", report.root);
         println!("enabled LSPs: {}", report.enabled_lsps.join(", "));

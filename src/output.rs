@@ -1,5 +1,11 @@
 //! Machine-readable CLI output (spec §23).
 //!
+//! Lives in the binary crate, not the library: printing is a command-level
+//! concern (`AGENTS.md`'s "nothing in the library knows a command exists"
+//! extends to "the library never prints", since a caller using
+//! `projectd::config`/`projectd::daemon` as a library — as `mcp::tools` does
+//! — must never have output silently land on its stdout).
+//!
 //! Every command's `--json` payload is wrapped in one small, versioned
 //! envelope, so a consumer (an agent, a script) can tell success from
 //! failure and detect a breaking shape change without parsing the human

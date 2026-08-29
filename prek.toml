@@ -78,3 +78,15 @@ pass_filenames = false
 #   entry = "bash -c '! grep -rnP --include=*.rs \"(?<![A-Za-z0-9_])ureq::\" src | grep -v \"^src/data/\"'"
 #   files = "\\.rs$"
 #   pass_filenames = false
+
+# AGENTS.md invariant #6: nothing in the library prints. `output.rs` — the
+# one place printing is allowed — lives in the binary crate specifically so
+# this grep can stay a flat exclusion list instead of an allowlist of call
+# sites, which would rot the moment a new library module is added.
+[[repos.hooks]]
+id = "library-never-prints"
+name = "the library never prints (println!/eprintln!/print!/eprint!)"
+language = "system"
+entry = "bash -c '! grep -rnE \"(print|eprint)(ln)?!\" src/config src/daemon src/mcp src/project src/mise.rs src/templating.rs src/client.rs src/error.rs src/lib.rs'"
+files = "\\.rs$"
+pass_filenames = false

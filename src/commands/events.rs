@@ -28,7 +28,7 @@ fn print_event(ctx: &Context, response: Response) -> projectd::Result<()> {
     match response {
         Response::Event(event) => {
             if ctx.json {
-                projectd::output::print_ok(&event);
+                crate::output::print_ok(&event);
             } else {
                 println!("{event:?}");
             }

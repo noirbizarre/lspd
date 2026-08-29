@@ -37,7 +37,7 @@ pub fn info(ctx: &Context) -> projectd::Result<()> {
     };
 
     if ctx.json {
-        projectd::output::print_ok(&info);
+        crate::output::print_ok(&info);
     } else {
         println!("root:  {}", info.root);
         println!("name:  {}", info.name);
@@ -92,7 +92,7 @@ pub fn capabilities(ctx: &Context) {
     };
 
     if ctx.json {
-        projectd::output::print_ok(&capabilities);
+        crate::output::print_ok(&capabilities);
     } else {
         println!("lsp:    {}", capabilities.lsp);
         println!("events: {}", capabilities.events);

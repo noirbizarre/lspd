@@ -127,4 +127,3 @@ jobs:
         run: gh release upload "${{ inputs.tag }}" dist/* --clobber
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
