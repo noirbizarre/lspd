@@ -65,6 +65,60 @@ demand = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 
+# --- projectd itself ----------------------------------------------------
+#
+# Everything below is projectd's own additions, kept below the template's
+# marker so `git tpl update` never conflicts with them.
+
+# net/process: Unix sockets + spawning LSP servers with piped stdio.
+# signal: graceful daemon shutdown on SIGINT/SIGTERM.
+# The rest is what a multi-client, multi-process async daemon needs.
+tokio = { version = "1", features = ["rt-multi-thread", "net", "process", "fs", "io-util", "io-std", "macros", "signal", "sync", "time"] }
+
+# Templating: ProjectD resolves `{{ env.* }}` templates server-side so
+# clients never need their own Jinja engine (spec §6/§18).
+minijinja = "2"
+
+# Filesystem watching: cross-platform (inotify/FSEvents/...) abstraction plus
+# save-as-rename debouncing, so editors' atomic saves emit one event, not three.
+notify = "8"
+notify-debouncer-full = "0.7"
+
+# XDG-aware config/data/cache directories.
+directories = "6"
+
+# Layered TOML config parsing. Merge semantics are hand-rolled (see
+# docs/adr/0002-config-layering-and-merge-semantics.md) rather than pulled
+# from a generic layered-config crate, because the required per-field rules
+# (definitions merge by key, activation lists replace wholesale, JSON blobs
+# deep-merge) do not map onto a one-size-fits-all merge strategy.
+toml = "1"
+
+# Path glob matching for the event stream and watch rules.
+globset = "0.4"
+
+# Shared vocabulary for LSP `initializationOptions`/capabilities, so those
+# fields are validated/typed rather than opaque JSON all the way through.
+lsp-types = "0.97"
+
+# The official Model Context Protocol Rust SDK, used for `projectd mcp serve`.
+rmcp = { version = "3", features = ["server", "macros", "transport-io"] }
+
+# Structured logging for a long-lived daemon juggling multiple LSP
+# subprocesses and client connections concurrently.
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Per-daemon-instance identity, exchanged in the handshake.
+uuid = { version = "1", features = ["v4"] }
+
+# Deterministic Unix socket path derivation from a canonical project root
+# (see docs/adr/0004-deterministic-socket-discovery.md) — discovery is a
+# pure function of the root, not a lookup table.
+sha2 = "0.10"
+
+async-trait = "0.1"
+
 [dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
