@@ -4,10 +4,10 @@
 use std::path::Path;
 use std::time::Duration;
 
-use projectd::daemon::events::FsEvent;
-use projectd::daemon::protocol::{Request, Response};
-use projectd::daemon::socket;
-use projectd::project::ProjectRoot;
+use lspd::daemon::events::FsEvent;
+use lspd::daemon::protocol::{Request, Response};
+use lspd::daemon::socket;
+use lspd::project::ProjectRoot;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::UnixStream;
 use tokio::time::timeout;
@@ -16,7 +16,7 @@ async fn start_daemon(root: &ProjectRoot) {
     let socket_path = socket::control_socket_path(root.path());
     let spawned_root = root.clone();
     tokio::spawn(async move {
-        let _ = projectd::daemon::serve(spawned_root).await;
+        let _ = lspd::daemon::serve(spawned_root).await;
     });
     wait_for_socket(&socket_path).await;
 }

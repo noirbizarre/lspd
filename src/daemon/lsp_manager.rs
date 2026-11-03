@@ -84,7 +84,7 @@ impl Drop for LspInstance {
 /// Owns every LSP instance for one project, keyed by definition name.
 pub struct LspManager {
     /// Where per-instance proxy sockets are created, e.g.
-    /// `$XDG_RUNTIME_DIR/projectd/<hash>/`.
+    /// `$XDG_RUNTIME_DIR/lspd/<hash>/`.
     sockets_dir: PathBuf,
     instances: Mutex<HashMap<String, LspInstance>>,
 }

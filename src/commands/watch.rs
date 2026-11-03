@@ -1,13 +1,13 @@
-//! `projectd watch <...>`. All three require a daemon: watch rules only mean
+//! `lspd watch <...>`. All three require a daemon: watch rules only mean
 //! anything against the daemon's persistent watcher, not a one-shot CLI
 //! invocation.
 
-use projectd::client;
-use projectd::daemon::protocol::{Request, Response};
+use lspd::client;
+use lspd::daemon::protocol::{Request, Response};
 
 use super::Context;
 
-pub async fn list(ctx: &Context) -> projectd::Result<()> {
+pub async fn list(ctx: &Context) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     let response = client::request(&mut conn, Request::WatchList).await?;
     match response {
@@ -28,7 +28,7 @@ pub async fn list(ctx: &Context) -> projectd::Result<()> {
     }
 }
 
-async fn set(ctx: &Context, name: &str, enabled: bool) -> projectd::Result<()> {
+async fn set(ctx: &Context, name: &str, enabled: bool) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     let response = client::request(
         &mut conn,
@@ -51,10 +51,10 @@ async fn set(ctx: &Context, name: &str, enabled: bool) -> projectd::Result<()> {
     }
 }
 
-pub async fn enable(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub async fn enable(ctx: &Context, name: &str) -> lspd::Result<()> {
     set(ctx, name, true).await
 }
 
-pub async fn disable(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub async fn disable(ctx: &Context, name: &str) -> lspd::Result<()> {
     set(ctx, name, false).await
 }

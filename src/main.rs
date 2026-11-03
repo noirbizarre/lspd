@@ -1,7 +1,7 @@
-//! The projectd binary.
+//! The lspd binary.
 //!
 //! Thin by construction: `cli.rs` parses, `commands/*` execute (calling into
-//! the `projectd` library for everything that is not printing or argument
+//! the `lspd` library for everything that is not printing or argument
 //! handling), and this file only wires the two together plus process-level
 //! concerns (tracing, exit codes).
 
@@ -56,7 +56,7 @@ async fn run(args: Cli) -> ExitCode {
     }
 }
 
-async fn dispatch(ctx: &Context, command: Command) -> projectd::Result<()> {
+async fn dispatch(ctx: &Context, command: Command) -> lspd::Result<()> {
     match command {
         Command::Status => commands::status::run(ctx).await,
         Command::Project(ProjectCommand::Info) => commands::project::info(ctx),
@@ -87,11 +87,11 @@ async fn dispatch(ctx: &Context, command: Command) -> projectd::Result<()> {
 /// A `Context::new` failure (project root resolution) happens before we have
 /// a `Context` to route through `commands::report_error`, so this handles
 /// the `--json`/human split directly for that one early-exit case.
-fn report_startup_error(json: bool, error: projectd::Error) {
+fn report_startup_error(json: bool, error: lspd::Error) {
     if json {
         let code = miette::Diagnostic::code(&error)
             .map(|c| c.to_string())
-            .unwrap_or_else(|| "projectd::error::unknown".to_string());
+            .unwrap_or_else(|| "lspd::error::unknown".to_string());
         crate::output::print_err(&code, &error.to_string());
     } else {
         eprintln!("{:?}", miette::Report::new(error));
@@ -113,7 +113,7 @@ fn init_tracing(verbosity: u8) {
     };
 
     let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new(format!("projectd={default_level}")));
+        .unwrap_or_else(|_| EnvFilter::new(format!("lspd={default_level}")));
 
     tracing_subscriber::fmt()
         .with_env_filter(filter)

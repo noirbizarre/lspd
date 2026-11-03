@@ -1,7 +1,7 @@
 //! A minimal MCP server for AI agents (spec §22).
 //!
 //! MCP is complementary to native LSP, not a reimplementation of it: every
-//! tool here is a higher-level ProjectD capability (project info, effective
+//! tool here is a higher-level LSPD capability (project info, effective
 //! configuration, service lifecycle, task execution) that calls the exact
 //! same engine functions the CLI's `commands::*` call — `config` for
 //! configuration queries, `client` for anything stateful. Raw LSP traffic
@@ -25,16 +25,16 @@ use crate::project::ProjectRoot;
 use tools::{Capabilities, LspNameArgs, LspSummary, ProjectInfo, TaskRunArgs, TaskRunResult};
 
 /// The MCP server, scoped to one project for its whole lifetime — an agent
-/// wanting a different project starts a different `projectd mcp serve`
+/// wanting a different project starts a different `lspd mcp serve`
 /// (matching how the CLI resolves `--project`/cwd once per invocation).
 #[derive(Clone)]
-pub struct ProjectdServer {
+pub struct LspdServer {
     root: ProjectRoot,
     tool_router: ToolRouter<Self>,
 }
 
 #[tool_router]
-impl ProjectdServer {
+impl LspdServer {
     /// Builds a server scoped to `root`. Public so integration tests can
     /// serve it over an in-memory transport rather than only via
     /// [`serve`]'s real stdio.
@@ -61,10 +61,8 @@ impl ProjectdServer {
         }))
     }
 
-    /// What this ProjectD instance can do for the project.
-    #[tool(
-        description = "Report which ProjectD capabilities are available (lsp, events, watch, task)"
-    )]
+    /// What this LSPD instance can do for the project.
+    #[tool(description = "Report which LSPD capabilities are available (lsp, events, watch, task)")]
     fn project_capabilities(&self) -> Json<Capabilities> {
         Json(Capabilities {
             lsp: true,
@@ -188,7 +186,7 @@ impl ProjectdServer {
 }
 
 #[tool_handler(router = self.tool_router)]
-impl ServerHandler for ProjectdServer {
+impl ServerHandler for LspdServer {
     fn get_info(&self) -> ServerInfo {
         ServerInfo::new(ServerCapabilities::builder().enable_tools().build())
     }
@@ -200,7 +198,7 @@ fn resolve_config(root: &ProjectRoot) -> Result<EffectiveConfig, String> {
 
 /// Runs the MCP server over stdio until the peer disconnects.
 pub async fn serve(root: ProjectRoot) -> crate::Result<()> {
-    let server = ProjectdServer::new(root)
+    let server = LspdServer::new(root)
         .serve(rmcp::transport::stdio())
         .await
         .map_err(|source| crate::Error::io("<mcp stdio>", std::io::Error::other(source)))?;

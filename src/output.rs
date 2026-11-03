@@ -3,7 +3,7 @@
 //! Lives in the binary crate, not the library: printing is a command-level
 //! concern (`AGENTS.md`'s "nothing in the library knows a command exists"
 //! extends to "the library never prints", since a caller using
-//! `projectd::config`/`projectd::daemon` as a library — as `mcp::tools` does
+//! `lspd::config`/`lspd::daemon` as a library — as `mcp::tools` does
 //! — must never have output silently land on its stdout).
 //!
 //! Every command's `--json` payload is wrapped in one small, versioned
@@ -41,7 +41,7 @@ enum Status {
 
 #[derive(Debug, Serialize)]
 struct ErrorPayload {
-    /// The diagnostic code, e.g. `projectd::config::unknown_lsp` — the
+    /// The diagnostic code, e.g. `lspd::config::unknown_lsp` — the
     /// stable, grep-able identifier (see `AGENTS.md`'s error-handling rule).
     code: String,
     message: String,

@@ -6,7 +6,7 @@ Notes for anyone — human or otherwise — changing this repository.
 
 Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents
 
-projectd is a local daemon, spawned on demand per project, that shares LSP
+lspd is a local daemon, spawned on demand per project, that shares LSP
 server processes, a filesystem event stream, and a Mise-resolved environment
 across every client that asks for them — an editor, a terminal tool, an AI
 agent — over a Unix socket and a minimal MCP server. It composes existing
@@ -38,7 +38,7 @@ checks is a comment, and it will be violated.
    otherwise produce — enforced by
    `daemon::events::tests::a_renamed_event_serializes_to_the_documented_file_dot_renamed_shape`
    and `config::watch::tests::event_kind_parses_from_the_documented_file_dot_prefixed_spelling`.
-5. **Templates are resolved by projectd, never by a client.** `lsp config`'s
+5. **Templates are resolved by lspd, never by a client.** `lsp config`'s
    output never contains `{{ }}` syntax — enforced by
    `config::tests::settings_templates_render_against_the_effective_environment`.
 6. **The library never imports `cli` or prints anything.** `commands/*` (the
@@ -49,7 +49,7 @@ checks is a comment, and it will be violated.
 ```
 src/
 ├── lib.rs        the library surface: config, project, daemon, client, mcp, mise, templating
-├── main.rs       the projectd binary — thin: parse, dispatch, map exit code
+├── main.rs       the lspd binary — thin: parse, dispatch, map exit code
 ├── cli.rs        argument types only
 ├── error.rs      the crate's error type
 ├── config/       layered configuration, merge rules, the built-in registry
@@ -70,7 +70,7 @@ code is worse than none.
 **Errors are typed and actionable.** `thiserror` for the library, `miette` at
 the binary edge. A diagnostic must carry the two things the user does not
 already know: what specifically failed, and what to do about it. Diagnostic
-codes are `projectd::<module>::<kind>`, and a code is a public identifier
+codes are `lspd::<module>::<kind>`, and a code is a public identifier
 users grep for — renaming one is a breaking change.
 
 **Test names are sentences.** `an_unchanged_input_produces_no_output`, not

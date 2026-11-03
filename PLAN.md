@@ -14,7 +14,7 @@ referenced where one exists), or genuinely future work.
 - [x] 1.1 Bootstrap from `rust.tpl` via `git-tpl` (single crate, `publish = false`, `docs = true`, `msrv = 1.88`)
 - [x] 1.2 Add project dependencies (tokio, minijinja, notify, directories, toml, globset, lsp-types, rmcp, tracing, uuid, sha2, libc, schemars)
 - [x] 1.3 Drop the Windows leg from the CI test matrix (Unix-only daemon — [ADR-0003](docs/adr/0003-unix-only-platform-scope.md))
-- [x] 1.4 `typos.toml` exception for "projectd" itself
+- [x] 1.4 `typos.toml` exception for "lspd" itself
 - [x] 1.5 Architecture-guard prek hook: the library never prints
 - [ ] 1.6 Verify the MSRV (1.88) actually compiles — only built against a newer local toolchain so far; `msrv.yaml` has never run
 - [ ] 1.7 Exercise `mise run cover` / Codecov upload end to end — never run against a real Codecov project
@@ -28,14 +28,14 @@ referenced where one exists), or genuinely future work.
 - [x] 2.4 Built-in registry: `pyright`, `ruff`, `rust-analyzer`, `gopls`, `typescript-language-server`
 - [x] 2.5 Watch rule patches merged by name, same per-field rules
 - [x] 2.6 `CommandSpec` string-or-array deserialization
-- [ ] 2.7 No integration test exercises the user config layer (`$XDG_CONFIG_HOME/projectd/config.toml`) end to end — only project/local layers are covered
+- [ ] 2.7 No integration test exercises the user config layer (`$XDG_CONFIG_HOME/lspd/config.toml`) end to end — only project/local layers are covered
 - [ ] 2.8 `[events].ignore` project config is documented (`docs/events.md`) but not implemented — only the hardcoded default ignore list exists
-- [ ] 2.9 LSP `capabilities` is passed through as raw JSON only; the spec's "merged into ProjectD's default client capabilities" has no default set to merge into
+- [ ] 2.9 LSP `capabilities` is passed through as raw JSON only; the spec's "merged into LSPD's default client capabilities" has no default set to merge into
 - [ ] 2.10 `lsp-types` is a declared dependency but unused in code — integrate it (typed capabilities/initializationOptions) or remove it
 
 ## 3. Project detection
 
-- [x] 3.1 Canonical root discovery (walk-up for `.git` / `projectd.toml`)
+- [x] 3.1 Canonical root discovery (walk-up for `.git` / `lspd.toml`)
 - [x] 3.2 Project type detection via marker files (rust/python/go/javascript/typescript)
 - [ ] 3.3 Monorepo-aware detection (multiple project types in subdirectories) — out of scope by design (`project/detect.rs`), single-level markers only
 
@@ -63,7 +63,7 @@ referenced where one exists), or genuinely future work.
 - [x] 6.4 Discover-or-start client lifecycle (spawn detached, own process group, log file)
 - [x] 6.5 Graceful shutdown (SIGINT/SIGTERM/`Request::Shutdown`)
 - [x] 6.6 Stale-socket detection and cleanup
-- [ ] 6.7 `projectd daemon list` / cross-project enumeration of running daemons — deferred, no registry exists ([ADR-0004](docs/adr/0004-deterministic-socket-discovery.md))
+- [ ] 6.7 `lspd daemon list` / cross-project enumeration of running daemons — deferred, no registry exists ([ADR-0004](docs/adr/0004-deterministic-socket-discovery.md))
 - [ ] 6.8 `daemon --detach` CLI flag is parsed but ignored by `commands::daemon::serve` — wire it up or remove it
 - [ ] 6.9 No push notification to already-attached clients when configuration changes — it is only re-resolved lazily on the next `ensure`/`endpoint` call
 
@@ -83,7 +83,7 @@ referenced where one exists), or genuinely future work.
 - [x] 8.2 Atomic rename detection (`file.renamed`), falling back to created+deleted
 - [x] 8.3 Default ignore list (`.git`, `target`, `node_modules`, etc.)
 - [x] 8.4 Server-side glob filtering via `Request::Subscribe { paths }`
-- [x] 8.5 `projectd events` CLI command
+- [x] 8.5 `lspd events` CLI command
 - [ ] 8.6 Configurable ignore list per project — see 2.8
 - [ ] 8.7 No event history/replay for a client that subscribes after the fact — `broadcast` only holds its channel capacity (1024), no persisted log
 

@@ -1,4 +1,4 @@
-//! `projectd status`.
+//! `lspd status`.
 //!
 //! Reports both the effective configuration summary (always available) and,
 //! if a daemon happens to be reachable, its handshake — but never starts one
@@ -7,8 +7,8 @@
 
 use serde::Serialize;
 
-use projectd::client;
-use projectd::config::EffectiveConfig;
+use lspd::client;
+use lspd::config::EffectiveConfig;
 
 use super::Context;
 
@@ -22,17 +22,17 @@ struct StatusReport {
 #[derive(Debug, Serialize)]
 struct DaemonStatus {
     instance_id: String,
-    projectd_version: String,
+    lspd_version: String,
     protocol_version: u32,
 }
 
-pub async fn run(ctx: &Context) -> projectd::Result<()> {
+pub async fn run(ctx: &Context) -> lspd::Result<()> {
     let config = EffectiveConfig::resolve(&ctx.root)?;
     let daemon = client::try_handshake(&ctx.root)
         .await
         .map(|h| DaemonStatus {
             instance_id: h.instance_id.to_string(),
-            projectd_version: h.projectd_version,
+            lspd_version: h.lspd_version,
             protocol_version: h.protocol_version,
         });
 
@@ -49,8 +49,8 @@ pub async fn run(ctx: &Context) -> projectd::Result<()> {
         println!("enabled LSPs: {}", report.enabled_lsps.join(", "));
         match &report.daemon {
             Some(d) => println!(
-                "daemon: running (projectd {}, protocol v{})",
-                d.projectd_version, d.protocol_version
+                "daemon: running (lspd {}, protocol v{})",
+                d.lspd_version, d.protocol_version
             ),
             None => println!("daemon: not running"),
         }

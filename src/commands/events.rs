@@ -1,14 +1,14 @@
-//! `projectd events` — subscribes to the shared filesystem event stream.
+//! `lspd events` — subscribes to the shared filesystem event stream.
 //!
 //! Requires a daemon (starting one if needed): the whole point of the shared
 //! watcher is that this command does not run its own.
 
-use projectd::client;
-use projectd::daemon::protocol::{Request, Response};
+use lspd::client;
+use lspd::daemon::protocol::{Request, Response};
 
 use super::Context;
 
-pub async fn run(ctx: &Context, paths: Vec<String>) -> projectd::Result<()> {
+pub async fn run(ctx: &Context, paths: Vec<String>) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     client::request(&mut conn, Request::Subscribe { paths })
         .await
@@ -24,7 +24,7 @@ pub async fn run(ctx: &Context, paths: Vec<String>) -> projectd::Result<()> {
     }
 }
 
-fn print_event(ctx: &Context, response: Response) -> projectd::Result<()> {
+fn print_event(ctx: &Context, response: Response) -> lspd::Result<()> {
     match response {
         Response::Event(event) => {
             if ctx.json {

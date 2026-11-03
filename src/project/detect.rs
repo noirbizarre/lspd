@@ -1,7 +1,7 @@
 //! Marker-file → project-type detection.
 //!
 //! Used only to drive zero-config LSP activation (`config::activation`): a
-//! project with no `projectd.toml` at all should still get sensible LSPs
+//! project with no `lspd.toml` at all should still get sensible LSPs
 //! enabled, and the only signal available for that is "what kind of project
 //! is this", inferred from well-known files.
 
@@ -71,7 +71,7 @@ const MARKERS: &[(&str, ProjectType)] = &[
 ///
 /// Only looks at `root` itself, not subdirectories: a monorepo with a
 /// `frontend/package.json` and a `backend/Cargo.toml` is intentionally out of
-/// scope for zero-config detection in the MVP (an explicit `projectd.toml` is
+/// scope for zero-config detection in the MVP (an explicit `lspd.toml` is
 /// the documented answer for monorepos).
 pub fn detect(root: &Path) -> Vec<ProjectType> {
     let mut found: Vec<ProjectType> = MARKERS

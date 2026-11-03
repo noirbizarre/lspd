@@ -3,7 +3,7 @@
 //! One watcher per daemon instance, rooted at the project root, broadcasting
 //! normalized [`FsEvent`]s to every subscribed connection. Deliberately
 //! independent of watch rules (`daemon::watch_runtime`): this module knows
-//! nothing about commands, only about producing events — "ProjectD emits
+//! nothing about commands, only about producing events — "LSPD emits
 //! events. Consumers decide what to do with them." (spec §20).
 
 use std::path::{Path, PathBuf};
@@ -30,7 +30,7 @@ const DEFAULT_IGNORE: &[&str] = &[
     "__pycache__",
     "dist",
     "build",
-    ".projectd",
+    ".lspd",
 ];
 
 /// A normalized filesystem event, independent of which OS backend produced
@@ -209,7 +209,7 @@ mod tests {
 
     #[test]
     fn a_path_under_a_default_ignored_directory_is_ignored() {
-        assert!(is_ignored(Path::new("target/debug/projectd")));
+        assert!(is_ignored(Path::new("target/debug/lspd")));
         assert!(is_ignored(Path::new("frontend/node_modules/lib/index.js")));
     }
 

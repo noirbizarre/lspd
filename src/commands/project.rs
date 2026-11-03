@@ -1,12 +1,12 @@
-//! `projectd project info` / `projectd project capabilities`.
+//! `lspd project info` / `lspd project capabilities`.
 //!
-//! Both are daemon-independent: they call `projectd::config::EffectiveConfig`
+//! Both are daemon-independent: they call `lspd::config::EffectiveConfig`
 //! directly, in-process. A client asking "what is this project" should not
 //! have to wait for (or start) a daemon just to find out.
 
 use serde::Serialize;
 
-use projectd::config::EffectiveConfig;
+use lspd::config::EffectiveConfig;
 
 use super::Context;
 
@@ -14,13 +14,13 @@ use super::Context;
 struct ProjectInfo {
     root: String,
     name: String,
-    detected_types: Vec<projectd::project::ProjectType>,
+    detected_types: Vec<lspd::project::ProjectType>,
     configuration_sources: Vec<String>,
     enabled_lsps: Vec<String>,
     known_lsps: Vec<String>,
 }
 
-pub fn info(ctx: &Context) -> projectd::Result<()> {
+pub fn info(ctx: &Context) -> lspd::Result<()> {
     let config = EffectiveConfig::resolve(&ctx.root)?;
 
     let info = ProjectInfo {

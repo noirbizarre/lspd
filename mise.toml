@@ -122,17 +122,17 @@ depends = ["format:check", "lint", "lint:actions", "spell", "test"]
 description = "Everything CI runs, locally"
 depends = ["check", "docs:build"]
 
-# --- projectd itself ---------------------------------------------------
+# --- lspd itself -------------------------------------------------------
 
 [tasks.cli]
-description = "Run projectd from source"
+description = "Run lspd from source"
 # `raw_args` so flags reach the binary rather than mise: `mise cli --help`
 # prints the binary's help, not the task's.
 raw_args = true
-run = "cargo run --bin projectd --"
+run = "cargo run --bin lspd --"
 
 [tasks.setup]
-description = "Install projectd locally, into ~/.cargo/bin"
+description = "Install lspd locally, into ~/.cargo/bin"
 run = "cargo install --path . --force"
 
 # --- Documentation ----------------------------------------------------------

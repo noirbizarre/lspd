@@ -1,6 +1,6 @@
 //! Project/worktree root detection.
 //!
-//! ProjectD's identity for a running daemon is a canonical filesystem path,
+//! LSPD's identity for a running daemon is a canonical filesystem path,
 //! not whatever relative directory a client happened to invoke it from — two
 //! clients in `src/` and `tests/` of the same checkout must resolve to the
 //! same instance. Detection therefore always walks upward.
@@ -16,7 +16,7 @@ pub use detect::ProjectType;
 /// checked first and wins over any of the language markers: a monorepo with
 /// a `Cargo.toml` in a subdirectory is still one project rooted at the
 /// repository root, not one per crate.
-const ROOT_MARKERS: &[&str] = &[".git", "projectd.toml"];
+const ROOT_MARKERS: &[&str] = &[".git", "lspd.toml"];
 
 /// A resolved, canonicalized project root.
 ///
@@ -29,8 +29,8 @@ pub struct ProjectRoot(PathBuf);
 
 impl ProjectRoot {
     /// Walks upward from `start` looking for a root marker (`.git` or
-    /// `projectd.toml`). Falls back to
-    /// `start` itself (canonicalized) if none is found — ProjectD must work
+    /// `lspd.toml`). Falls back to
+    /// `start` itself (canonicalized) if none is found — LSPD must work
     /// with zero configuration and no VCS, per the spec, so "no marker
     /// found" is not an error, just a smaller-scoped root.
     pub fn discover(start: &Path) -> crate::Result<Self> {
@@ -120,7 +120,7 @@ mod tests {
         fs::create_dir_all(tmp.path().join(".git")).unwrap();
         let inner = tmp.path().join("vendor/subproject");
         fs::create_dir_all(&inner).unwrap();
-        fs::write(inner.join("projectd.toml"), "").unwrap();
+        fs::write(inner.join("lspd.toml"), "").unwrap();
         let nested = inner.join("src");
         fs::create_dir_all(&nested).unwrap();
 

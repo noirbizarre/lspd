@@ -18,7 +18,7 @@ editors, agents, and watch rules alike, all as peers.
 channel of normalized `FsEvent`s, with no knowledge of watch rules or
 commands. `daemon::watch_runtime::WatchRuntime` is a separate component that
 subscribes to that same broadcast channel like any other consumer (a
-`projectd events` CLI invocation subscribes identically). Disabling every
+`lspd events` CLI invocation subscribes identically). Disabling every
 watch rule does not touch the watcher; the event stream keeps running for
 whichever other subscribers exist.
 

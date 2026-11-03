@@ -31,7 +31,7 @@ build there.
 - The whole daemon/socket/proxy/event-stream subsystem is unconditionally
   Unix-only code — no cross-platform abstraction layer to maintain, no
   Windows-specific code paths to test.
-- Windows users cannot run projectd at all in this MVP, including the
+- Windows users cannot run lspd at all in this MVP, including the
   daemon-independent commands (`lsp config`, `project info`) that have no
   technical reason to require Unix — they are blocked only by sharing a
   binary with the Unix-only parts. Splitting them into a

@@ -21,7 +21,7 @@ shutdown_timeout_ms = 5000 # default
 (the spec's convention — element 0 is the executable, the rest are leading
 arguments, prepended to whatever `args` also contributes). `settings` and
 `initialization_options` are passed through using native LSP terminology
-(`initializationOptions`, `workspace/configuration`) — projectd does not
+(`initializationOptions`, `workspace/configuration`) — lspd does not
 invent its own vocabulary where an LSP concept already exists.
 
 `auto_enable` (registry-only, not meaningful in project/user overrides) marks
@@ -31,19 +31,19 @@ a definition as a zero-config default — see
 ## Effective configuration
 
 ```console
-$ projectd lsp list
+$ lspd lsp list
 * pyright              python
 * ruff                 python
   rust-analyzer        rust
 
-$ projectd lsp config pyright
+$ lspd lsp config pyright
 name:    pyright
 command: pyright-langserver --stdio
 languages: python
 ```
 
 `lsp list` and `lsp config` never need a running daemon — they resolve the
-same layered configuration `projectd status`/`project info` do, in-process.
+same layered configuration `lspd status`/`project info` do, in-process.
 Every field is already template-rendered; nothing downstream needs to know
 about MiniJinja or Mise.
 
@@ -55,16 +55,16 @@ name identifies one logical service **per project**; `ensure` reuses an
 already-running instance rather than starting a duplicate.
 
 ```console
-$ projectd lsp ensure pyright
+$ lspd lsp ensure pyright
 pyright: Running
 
-$ projectd lsp endpoint pyright
-/run/user/1000/projectd/<hash>/pyright.lsp.sock
+$ lspd lsp endpoint pyright
+/run/user/1000/lspd/<hash>/pyright.lsp.sock
 ```
 
 The endpoint is a Unix socket dedicated to that one running instance,
 carrying raw LSP stdio bytes (`Content-Length`-framed JSON-RPC, exactly as
-the process itself speaks it) — projectd does not interpret LSP messages,
+the process itself speaks it) — lspd does not interpret LSP messages,
 only pipes them.
 
 ### One exclusive client at a time

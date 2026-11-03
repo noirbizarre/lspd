@@ -1,7 +1,7 @@
 //! Watch rules — optional consumers of the filesystem event stream.
 //!
 //! Kept entirely separate from the event stream itself (`daemon::events`):
-//! ProjectD emits events regardless of whether any watch rule exists, and a
+//! LSPD emits events regardless of whether any watch rule exists, and a
 //! watch rule is just one more subscriber that happens to run a command
 //! (spec §20, §21). Rules merge by `name`, same shape as LSP definitions.
 
@@ -45,7 +45,7 @@ pub struct WatchRulePatch {
     pub command: Option<CommandSpec>,
     /// Whether the rule is active. Defaults to `true` when resolved. This is
     /// the config-file default; `daemon::watch_runtime` additionally tracks
-    /// a runtime-only override set by `projectd watch enable/disable`
+    /// a runtime-only override set by `lspd watch enable/disable`
     /// (spec's local-override requirement), which is deliberately not
     /// persisted back into any config file (see
     /// `docs/adr/0002-config-layering-and-merge-semantics.md`).

@@ -72,8 +72,8 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          cp "target/${{ matrix.target }}/release/projectd${{ matrix.ext }}" \
-             "dist/projectd_${{ inputs.tag }}_${{ matrix.asset }}${{ matrix.ext }}"
+          cp "target/${{ matrix.target }}/release/lspd${{ matrix.ext }}" \
+             "dist/lspd_${{ inputs.tag }}_${{ matrix.asset }}${{ matrix.ext }}"
 
       - uses: actions/upload-artifact@v7
         with:

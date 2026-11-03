@@ -1,4 +1,4 @@
-//! Discovery: "where is the projectd instance for this project?" (spec §16),
+//! Discovery: "where is the lspd instance for this project?" (spec §16),
 //! answered as a pure function of the canonical project root rather than a
 //! lookup table (`docs/adr/0004-deterministic-socket-discovery.md`) — two
 //! clients resolving the same root always compute the same socket path
@@ -9,14 +9,14 @@ use std::path::{Path, PathBuf};
 use sha2::{Digest, Sha256};
 
 /// The directory every project's sockets and proxy-socket subdirectories
-/// live under: `$XDG_RUNTIME_DIR/projectd`, falling back to
-/// `/tmp/projectd-<uid>` when `XDG_RUNTIME_DIR` is unset (e.g. a non-systemd
+/// live under: `$XDG_RUNTIME_DIR/lspd`, falling back to
+/// `/tmp/lspd-<uid>` when `XDG_RUNTIME_DIR` is unset (e.g. a non-systemd
 /// system, or a login without a session manager).
 #[must_use]
 pub fn runtime_dir() -> PathBuf {
     match std::env::var_os("XDG_RUNTIME_DIR") {
-        Some(dir) if !dir.is_empty() => PathBuf::from(dir).join("projectd"),
-        _ => std::env::temp_dir().join(format!("projectd-{}", current_uid())),
+        Some(dir) if !dir.is_empty() => PathBuf::from(dir).join("lspd"),
+        _ => std::env::temp_dir().join(format!("lspd-{}", current_uid())),
     }
 }
 

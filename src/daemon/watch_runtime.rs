@@ -23,7 +23,7 @@ struct CompiledRule {
 }
 
 /// Owns every watch rule for one daemon instance, plus the runtime-only
-/// enable/disable overrides `projectd watch enable/disable` sets. Overrides
+/// enable/disable overrides `lspd watch enable/disable` sets. Overrides
 /// are intentionally not persisted to any configuration file — they apply
 /// "for the running daemon's lifetime" (spec's local-override requirement,
 /// interpreted here as session-scoped rather than disk-scoped; see
@@ -107,7 +107,7 @@ impl WatchRuntime {
     /// that fire. A rule already mid-execution is skipped for this event
     /// rather than queued (spec-adjacent "do not replace Mise's task
     /// system" caution: overlapping runs of the same task are the task
-    /// runner's problem to serialize, not ProjectD's).
+    /// runner's problem to serialize, not LSPD's).
     pub async fn handle_event(&self, event: &FsEvent, env: &HashMap<String, String>, root: &Path) {
         let event_kind = to_event_kind(event);
         for compiled in &self.rules {

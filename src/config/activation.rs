@@ -37,7 +37,7 @@ impl ActivationPatch {
 /// If any layer ever set `[lsps].enabled`, that value wins outright — explicit
 /// configuration always beats zero-config inference, with no partial mixing
 /// of the two (spec §8: registry defaults "should not force a project to
-/// declare a `projectd.toml`", but an explicit list is still absolute once
+/// declare a `lspd.toml`", but an explicit list is still absolute once
 /// given). Otherwise, falls back to every registry definition marked
 /// `auto_enable = true` whose `languages` intersects a detected project type.
 #[must_use]

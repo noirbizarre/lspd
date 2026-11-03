@@ -3,9 +3,9 @@
 //!
 //! ```text
 //! built-in registry
-//!     -> user config      ($XDG_CONFIG_HOME/projectd/config.toml)
-//!     -> projectd.toml
-//!     -> projectd.local.toml
+//!     -> user config      ($XDG_CONFIG_HOME/lspd/config.toml)
+//!     -> lspd.toml
+//!     -> lspd.local.toml
 //!     -> template/environment resolution
 //!     -> effective configuration
 //! ```
@@ -47,7 +47,7 @@ pub struct EffectiveConfig {
     enabled: Vec<String>,
     context: TemplateContext,
     /// Which configuration files actually existed and contributed a layer —
-    /// exposed for `projectd status`/`project info` diagnostics, so a user
+    /// exposed for `lspd status`/`project info` diagnostics, so a user
     /// can see *why* a given value won without re-deriving the layering by
     /// hand.
     sources: Vec<PathBuf>,
@@ -140,7 +140,7 @@ impl EffectiveConfig {
     }
 
     /// Resolves and renders one named LSP definition — the effective
-    /// configuration a `projectd lsp config <name>` call returns (spec §18).
+    /// configuration a `lspd lsp config <name>` call returns (spec §18).
     /// Resolution is on demand and per-name: an unrelated definition with a
     /// bad template or a missing command never blocks this call.
     pub fn resolve_lsp(&self, name: &str) -> crate::Result<ResolvedLspDefinition> {
@@ -247,7 +247,7 @@ mod tests {
     #[test]
     fn project_config_can_override_one_definition_without_touching_activation() {
         let tmp = python_project(&[(
-            "projectd.toml",
+            "lspd.toml",
             r#"
             [lsp.pyright]
             command = ["basedpyright-langserver", "--stdio"]
@@ -258,7 +258,7 @@ mod tests {
 
         let pyright = config.resolve_lsp("pyright").unwrap();
         assert_eq!(pyright.executable, "basedpyright-langserver");
-        // Activation was never mentioned in projectd.toml, so zero-config
+        // Activation was never mentioned in lspd.toml, so zero-config
         // auto-enable still applies unchanged.
         assert_eq!(
             config.enabled(),
@@ -269,7 +269,7 @@ mod tests {
     #[test]
     fn local_config_can_change_activation_without_redefining_any_lsp() {
         let tmp = python_project(&[(
-            "projectd.local.toml",
+            "lspd.local.toml",
             r#"
             [lsps]
             enabled = ["ruff"]
@@ -288,14 +288,14 @@ mod tests {
     fn local_config_overrides_project_config_for_the_same_field() {
         let tmp = python_project(&[
             (
-                "projectd.toml",
+                "lspd.toml",
                 r#"
                 [lsp.pyright.settings.python.analysis]
                 typeCheckingMode = "basic"
                 "#,
             ),
             (
-                "projectd.local.toml",
+                "lspd.local.toml",
                 r#"
                 [lsp.pyright.settings.python.analysis]
                 typeCheckingMode = "strict"
@@ -325,7 +325,7 @@ mod tests {
     #[test]
     fn settings_templates_render_against_the_effective_environment() {
         let tmp = python_project(&[(
-            "projectd.toml",
+            "lspd.toml",
             r#"
             [lsp.pyright.settings.python.analysis]
             extraPaths = ["{{ env.PROJECT_ROOT }}/src"]

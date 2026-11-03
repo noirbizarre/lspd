@@ -37,12 +37,12 @@ fields it did not intend to change.
   the semantics are documented in code, not inferred from a library's
   default behavior.
 - Runtime overrides that must **not** persist to disk (watch rule
-  enable/disable via `projectd watch enable/disable`) live entirely outside
+  enable/disable via `lspd watch enable/disable`) live entirely outside
   this patch/merge pipeline, in `daemon::watch_runtime`'s in-memory state,
   resetting to the configured default on daemon restart. This is a
   deliberate simplification for the MVP, not an oversight: persisting
   runtime toggles would require deciding which file to write them into and
-  how that interacts with a committed `projectd.toml`, which is unresolved
+  how that interacts with a committed `lspd.toml`, which is unresolved
   scope.
 - Adding a new mergeable field means writing (and testing) its merge rule
   explicitly — more code than a one-line schema change in a generic

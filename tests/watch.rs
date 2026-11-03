@@ -4,9 +4,9 @@
 use std::path::Path;
 use std::time::Duration;
 
-use projectd::daemon::protocol::{Request, Response};
-use projectd::daemon::socket;
-use projectd::project::ProjectRoot;
+use lspd::daemon::protocol::{Request, Response};
+use lspd::daemon::socket;
+use lspd::project::ProjectRoot;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::UnixStream;
 
@@ -14,7 +14,7 @@ async fn start_daemon(root: &ProjectRoot) {
     let socket_path = socket::control_socket_path(root.path());
     let spawned_root = root.clone();
     tokio::spawn(async move {
-        let _ = projectd::daemon::serve(spawned_root).await;
+        let _ = lspd::daemon::serve(spawned_root).await;
     });
     wait_for_socket(&socket_path).await;
 }
@@ -54,7 +54,7 @@ async fn request(connection: &mut BufReader<UnixStream>, request: &Request) -> R
 fn project_with_watch_rule(marker: &Path) -> tempfile::TempDir {
     let tmp = tempfile::TempDir::new().unwrap();
     std::fs::write(
-        tmp.path().join("projectd.toml"),
+        tmp.path().join("lspd.toml"),
         format!(
             r#"
             [[watch]]

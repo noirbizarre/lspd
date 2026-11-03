@@ -10,9 +10,9 @@ LSP processes and watch-rule commands need the project's effective
 development environment (tool paths, versions, project-specific variables).
 [Mise](https://mise.jdx.dev) already solves tool installation, version
 management, and environment resolution; reimplementing any part of that
-inside projectd would duplicate a maintained tool and inevitably drift from
+inside lspd would duplicate a maintained tool and inevitably drift from
 it. The spec is explicit that Mise is "an implementation/provider detail,
-not part of the ProjectD protocol," anticipating other providers (e.g. Nix)
+not part of the LSPD protocol," anticipating other providers (e.g. Nix)
 later.
 
 ## Decision
@@ -22,7 +22,7 @@ Define a small `mise::EnvironmentProvider` trait
 it once as `MiseProvider`, which shells out to `mise env --json` and merges
 its output over the process's own environment (Mise wins on overlap).
 `mise::effective_environment` always injects `PROJECT_ROOT` last, so neither
-Mise nor the OS environment can shadow projectd's own contribution. If the
+Mise nor the OS environment can shadow lspd's own contribution. If the
 `mise` binary is missing or exits non-zero, `MiseProvider` logs a warning and
 falls back to the plain OS environment rather than failing — a project that
 does not use Mise must still work.

@@ -1,15 +1,15 @@
 # Templated settings and environment
 
-MiniJinja templates in `settings`/`environment` are rendered by projectd,
+MiniJinja templates in `settings`/`environment` are rendered by lspd,
 against the effective environment (OS env, overlaid with Mise's, with
 `PROJECT_ROOT` always set last) — see
 [Configuration](../../docs/configuration.md#templating).
 
 ```console
-$ projectd lsp config pyright --json | jq '.settings.python.analysis.extraPaths'
+$ lspd lsp config pyright --json | jq '.settings.python.analysis.extraPaths'
 ["/absolute/path/to/this/example/src"]
 
-$ projectd lsp config pyright --json | jq '.environment.PYTHONPATH'
+$ lspd lsp config pyright --json | jq '.environment.PYTHONPATH'
 "/absolute/path/to/this/example/src"
 ```
 

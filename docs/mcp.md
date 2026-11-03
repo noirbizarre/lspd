@@ -1,11 +1,11 @@
 # MCP
 
-`projectd mcp serve` runs a minimal [MCP](https://modelcontextprotocol.io)
+`lspd mcp serve` runs a minimal [MCP](https://modelcontextprotocol.io)
 server over stdio (via [`rmcp`](https://docs.rs/rmcp)), scoped to one project
 for its whole lifetime.
 
 MCP is complementary to native LSP, not a replacement for it: every tool
-below is a higher-level projectd capability, and each calls the exact same
+below is a higher-level lspd capability, and each calls the exact same
 engine functions (`config::EffectiveConfig`, `client::DaemonClient`) that the
 equivalent CLI subcommand calls — no protocol-specific logic is duplicated
 between the two surfaces.
@@ -35,10 +35,10 @@ between the two surfaces.
 ## Example
 
 ```console
-$ projectd mcp serve
+$ lspd mcp serve
 ```
 
 Then, from an MCP client, call `lsp_config` with `{"name": "pyright"}` to get
-the same fully-rendered configuration `projectd lsp config pyright --json`
+the same fully-rendered configuration `lspd lsp config pyright --json`
 would print — templates already resolved, no client-side rendering required
 (see [Configuration](configuration.md#templating)).

@@ -5,8 +5,8 @@
 
 use std::fs;
 
-use projectd::mcp::ProjectdServer;
-use projectd::project::ProjectRoot;
+use lspd::mcp::LspdServer;
+use lspd::project::ProjectRoot;
 use rmcp::ServiceExt;
 use rmcp::model::CallToolRequestParams;
 use serde_json::json;
@@ -23,7 +23,7 @@ async fn connect(root: ProjectRoot) -> rmcp::service::RunningService<rmcp::RoleC
     let (server_transport, client_transport) = tokio::io::duplex(4096);
 
     tokio::spawn(async move {
-        let _ = ProjectdServer::new(root)
+        let _ = LspdServer::new(root)
             .serve(server_transport)
             .await
             .unwrap()

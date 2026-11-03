@@ -1,6 +1,6 @@
 //! MiniJinja template resolution.
 //!
-//! ProjectD resolves templates; clients consume the effective, already
+//! LSPD resolves templates; clients consume the effective, already
 //! rendered configuration (spec §6, §18, ADR-0006). This module renders
 //! every string leaf of an LSP definition's `command`/`args`/`environment`
 //! and the string leaves nested inside its `initialization_options`/

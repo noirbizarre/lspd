@@ -6,10 +6,10 @@ Accepted.
 
 ## Context
 
-projectd's scope spans configuration resolution, a daemon, an IPC protocol,
+lspd's scope spans configuration resolution, a daemon, an IPC protocol,
 an MCP server, and a CLI — enough surface area that splitting it into
-several crates (`projectd-config`, `projectd-protocol`, `projectd-daemon`,
-`projectd-cli`) was considered, for stronger compile-time boundary
+several crates (`lspd-config`, `lspd-protocol`, `lspd-daemon`,
+`lspd-cli`) was considered, for stronger compile-time boundary
 enforcement between them. However, `rust.tpl` — the template this project is
 bootstrapped from and stays synchronized with via `git tpl update` — scaffolds
 exactly one crate (`[lib]` + `[[bin]]`), not a workspace, and diverging from
@@ -38,7 +38,7 @@ re-exports, not by the compiler.
   revisited if the codebase grows enough that accidental coupling becomes
   a recurring problem in review.
 - Integration tests (`tests/*.rs`) exercise the library directly
-  (`projectd::daemon::serve`, `projectd::mcp::ProjectdServer`) rather than
+  (`lspd::daemon::serve`, `lspd::mcp::LspdServer`) rather than
   only through the compiled binary, which is what a single crate with a
   real `[lib]` target makes straightforward — `tests/cli.rs` is the one
   suite that additionally spawns the real binary, specifically to cover the

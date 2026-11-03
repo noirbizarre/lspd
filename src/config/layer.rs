@@ -2,8 +2,8 @@
 //! `config::registry`) from a TOML file into the patch shape merged by
 //! `config::mod`.
 //!
-//! A layer that does not exist is not an error: "ProjectD must work when the
-//! project contains no ProjectD configuration" (spec §9) is satisfied here by
+//! A layer that does not exist is not an error: "LSPD must work when the
+//! project contains no LSPD configuration" (spec §9) is satisfied here by
 //! [`load`] returning an empty [`ConfigPatch`] rather than a special case the
 //! caller has to remember to handle.
 
@@ -28,7 +28,7 @@ struct WatchRuleEntry {
     patch: WatchRulePatch,
 }
 
-/// The raw shape of a `projectd.toml`-family file.
+/// The raw shape of a `lspd.toml`-family file.
 #[derive(Debug, Default, Deserialize)]
 struct ConfigFile {
     #[serde(default)]
@@ -65,7 +65,7 @@ impl ConfigPatch {
 
 /// Loads and parses a single configuration file. Returns `Ok(None)` if the
 /// file simply does not exist (the normal, expected case for
-/// `projectd.toml`/`projectd.local.toml`, and even for the user config on a
+/// `lspd.toml`/`lspd.local.toml`, and even for the user config on a
 /// freshly-installed machine) — only a genuine I/O error (permissions, a
 /// directory where a file was expected, ...) or invalid TOML is reported.
 pub fn load(path: &Path) -> crate::Result<Option<ConfigPatch>> {
@@ -97,26 +97,25 @@ pub fn load(path: &Path) -> crate::Result<Option<ConfigPatch>> {
     }))
 }
 
-/// `$XDG_CONFIG_HOME/projectd/config.toml`, with normal XDG fallback
-/// (`~/.config/projectd/config.toml` when unset) via the `directories` crate.
+/// `$XDG_CONFIG_HOME/lspd/config.toml`, with normal XDG fallback
+/// (`~/.config/lspd/config.toml` when unset) via the `directories` crate.
 #[must_use]
 pub fn user_config_path() -> Option<PathBuf> {
-    directories::ProjectDirs::from("", "", "projectd")
-        .map(|dirs| dirs.config_dir().join("config.toml"))
+    directories::ProjectDirs::from("", "", "lspd").map(|dirs| dirs.config_dir().join("config.toml"))
 }
 
-/// `projectd.toml` at the project root — optional, may be committed.
+/// `lspd.toml` at the project root — optional, may be committed.
 #[must_use]
 pub fn project_config_path(root: &Path) -> PathBuf {
-    root.join("projectd.toml")
+    root.join("lspd.toml")
 }
 
-/// `projectd.local.toml` at the project root — optional, normally untracked.
+/// `lspd.local.toml` at the project root — optional, normally untracked.
 /// See the recommended `.gitignore` entry documented alongside
 /// `docs/configuration.md`.
 #[must_use]
 pub fn local_config_path(root: &Path) -> PathBuf {
-    root.join("projectd.local.toml")
+    root.join("lspd.local.toml")
 }
 
 #[cfg(test)]
@@ -127,14 +126,14 @@ mod tests {
     #[test]
     fn a_missing_file_loads_as_an_empty_patch_rather_than_an_error() {
         let tmp = TempDir::new().unwrap();
-        let result = load(&tmp.path().join("projectd.toml")).unwrap();
+        let result = load(&tmp.path().join("lspd.toml")).unwrap();
         assert!(result.is_none());
     }
 
     #[test]
     fn duplicate_watch_rule_names_in_one_file_are_a_load_error() {
         let tmp = TempDir::new().unwrap();
-        let path = tmp.path().join("projectd.toml");
+        let path = tmp.path().join("lspd.toml");
         std::fs::write(
             &path,
             r#"
@@ -156,7 +155,7 @@ mod tests {
     #[test]
     fn a_well_formed_file_parses_lsp_activation_and_watch_sections() {
         let tmp = TempDir::new().unwrap();
-        let path = tmp.path().join("projectd.toml");
+        let path = tmp.path().join("lspd.toml");
         std::fs::write(
             &path,
             r#"

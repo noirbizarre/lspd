@@ -1,4 +1,4 @@
-# Contributing to projectd
+# Contributing to lspd
 
 ## Setup
 
@@ -21,7 +21,7 @@ components and cross-compilation targets.
 | Command | What it does |
 |---|---|
 | `mise run build` | Build the binary |
-| `mise run cli` | Run `projectd` from source (passes flags through) |
+| `mise run cli` | Run `lspd` from source (passes flags through) |
 | `mise run test` | Run the tests (accepts nextest selectors) |
 | `mise run cover` | Run the tests with coverage |
 | `mise run format` | Format |

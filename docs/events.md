@@ -2,7 +2,7 @@
 
 ## The event stream
 
-projectd owns one shared filesystem watcher per project (backed by
+lspd owns one shared filesystem watcher per project (backed by
 [`notify`](https://docs.rs/notify), abstracting inotify/FSEvents/etc.), and
 broadcasts normalized events to every subscriber:
 
@@ -19,10 +19,10 @@ editor's atomic save-via-rename) are debounced into one logical event per
 change.
 
 Default-ignored directories: `.git`, `target`, `node_modules`, `.venv`,
-`venv`, `__pycache__`, `dist`, `build`, `.projectd`.
+`venv`, `__pycache__`, `dist`, `build`, `.lspd`.
 
 ```console
-$ projectd events --path '**/*.py'
+$ lspd events --path '**/*.py'
 Created { path: "src/new_module.py" }
 ```
 
@@ -34,7 +34,7 @@ Created { path: "src/new_module.py" }
 ```text
 filesystem
     ↓
-projectd event stream
+lspd event stream
     ├──→ LSP
     ├──→ editors, agents
     └──→ watch rules   ← just one more subscriber
@@ -61,10 +61,10 @@ While a rule's command is still running, a further matching event for that
 overlapping run. Different rules run independently and concurrently.
 
 ```console
-$ projectd watch list
+$ lspd watch list
 * frontend-tests       frontend/**/*.ts
 
-$ projectd watch disable frontend-tests
+$ lspd watch disable frontend-tests
 frontend-tests: disabled
 ```
 
@@ -75,6 +75,6 @@ daemon resets every rule to its configured `enabled` value. See
 intentional rather than a shortcut.
 
 Mise tasks may be — and are, in the example above — the commands watch rules
-run. projectd does not replace Mise's task system, and does not implement
+run. lspd does not replace Mise's task system, and does not implement
 dependency-graph-aware build orchestration (no NX-like scheduler in this
 MVP).

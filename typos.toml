@@ -18,5 +18,5 @@ extend-exclude = [
 # The project's own name. `typos` reads it as a misspelling of "projected"
 # everywhere — in the crate name, the binary name, doc comments, `AGENTS.md`,
 # `README.md`, and the MCP server's own type name.
-projectd = "projectd"
-Projectd = "Projectd"
+lspd = "lspd"
+Lspd = "Lspd"

@@ -7,7 +7,7 @@
 
 [remote.github]
 owner = "noirbizarre"
-repo = "projectd"
+repo = "lspd"
 
 [changelog]
 header = """
@@ -70,7 +70,7 @@ trim = true
 footer = ""
 postprocessors = [
   { pattern = '\n+\z', replace = "\n" },
-  { pattern = "<REPO>", replace = "https://github.com/noirbizarre/projectd" },
+  { pattern = "<REPO>", replace = "https://github.com/noirbizarre/lspd" },
 ]
 
 [git]

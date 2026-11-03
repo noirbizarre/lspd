@@ -3,13 +3,13 @@
 
 [project]
 
-site_name = "projectd"
+site_name = "lspd"
 site_description = "Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents"
-site_url = "https://noirbizarre.github.io/projectd/"
+site_url = "https://noirbizarre.github.io/lspd/"
 site_author = "noirbizarre"
 
-repo_url = "https://github.com/noirbizarre/projectd"
-repo_name = "noirbizarre/projectd"
+repo_url = "https://github.com/noirbizarre/lspd"
+repo_name = "noirbizarre/lspd"
 edit_uri = "edit/main/docs/"
 
 copyright = """

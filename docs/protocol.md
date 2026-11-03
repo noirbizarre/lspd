@@ -6,16 +6,16 @@ The control socket path is a pure function of the canonical project root —
 no lookup registry, no PID file to go stale:
 
 ```text
-socket = $XDG_RUNTIME_DIR/projectd/<sha256(root)[..8 bytes hex]>.sock
+socket = $XDG_RUNTIME_DIR/lspd/<sha256(root)[..8 bytes hex]>.sock
 ```
 
-(falling back to `/tmp/projectd-<uid>/...` when `$XDG_RUNTIME_DIR` is unset).
+(falling back to `/tmp/lspd-<uid>/...` when `$XDG_RUNTIME_DIR` is unset).
 Two clients resolving the same root always compute the same path. See
 [ADR-0004](adr/0004-deterministic-socket-discovery.md).
 
-A client that cannot connect spawns `projectd daemon --project <root>`
+A client that cannot connect spawns `lspd daemon --project <root>`
 detached (its own process group, stdio redirected to a log file under
-`$XDG_STATE_HOME/projectd/`), then retries the connection for up to 5
+`$XDG_STATE_HOME/lspd/`), then retries the connection for up to 5
 seconds — the "discover-or-start" lifecycle (spec §14).
 
 ## Handshake
@@ -24,21 +24,22 @@ The first exchange on every connection, before anything else is accepted:
 
 ```json
 → {"type":"handshake"}
-← {"type":"handshake","protocol":"projectd","protocol_version":1,
-   "projectd_version":"0.1.0","project_root":"/work/demo",
+← {"type":"handshake","protocol":"lspd","protocol_version":2,
+   "lspd_version":"0.1.0","project_root":"/work/demo",
    "instance_id":"...", "capabilities":["lsp","events","watch"]}
 ```
 
 `protocol_version` is checked by every client before sending anything else;
-a mismatch is a `projectd::daemon::protocol_mismatch` error, not a garbled
+a mismatch is a `lspd::daemon::protocol_mismatch` error, not a garbled
 parse. `instance_id` is fresh per daemon process, so a client can detect
 "the daemon behind this socket restarted since I last talked to it."
 
 ## Wire format
 
-Newline-delimited JSON, internally tagged (`{"type": "...", ...}`). Every
-field added after protocol version 1 is `#[serde(default)]`, so an older
-client's requests keep parsing against a newer daemon and vice versa.
+Newline-delimited JSON, internally tagged (`{"type": "...", ...}`). Protocol
+version 2 uses `lspd_version` as the required binary-version field. Optional
+fields added within a protocol version use `#[serde(default)]` to preserve
+compatibility; changing or removing required fields requires a version bump.
 
 | Request | Response |
 |---|---|
@@ -86,6 +87,6 @@ protocol at all. See [LSP definitions and lifecycle](lsp.md#one-exclusive-client
 
 ## MCP
 
-`projectd mcp serve` speaks the standard MCP protocol (JSON-RPC over stdio,
+`lspd mcp serve` speaks the standard MCP protocol (JSON-RPC over stdio,
 via [`rmcp`](https://docs.rs/rmcp)) — it is a separate surface from the
 control socket, not layered on top of it. See [MCP](mcp.md).

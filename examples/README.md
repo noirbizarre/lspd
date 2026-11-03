@@ -1,6 +1,6 @@
 # Examples
 
-Example `projectd.toml`/`projectd.local.toml` configurations. projectd is a
+Example `lspd.toml`/`lspd.local.toml` configurations. lspd is a
 CLI and daemon, not a library other crates depend on, so these are
 configuration recipes to copy from rather than compilable Rust examples.
 
@@ -17,6 +17,6 @@ Run any of them with:
 
 ```console
 $ cd examples/python-dual-lsp
-$ projectd project info
-$ projectd lsp list
+$ lspd project info
+$ lspd lsp list
 ```

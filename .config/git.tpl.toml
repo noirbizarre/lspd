@@ -8,11 +8,11 @@ source = "https://github.com/noirbizarre/rust.tpl"
 
 [answers]
 author = "Axel H. <noirbizarre@gmail.com>"
-bin_name = "projectd"
+bin_name = "lspd"
 categories = "development-tools,command-line-utilities"
 copyright_holder = "Axel H."
 copyright_year = 2026
-crate = "projectd"
+crate = "lspd"
 description = "Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents"
 docs = true
 docs_accent = "indigo"

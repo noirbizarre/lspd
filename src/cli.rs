@@ -10,7 +10,7 @@ use clap::{Parser, Subcommand};
 
 /// Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents
 #[derive(Debug, Parser)]
-#[command(name = "projectd", version, about, long_about = None)]
+#[command(name = "lspd", version, about, long_about = None)]
 pub struct Cli {
     /// Increase verbosity. Repeat for more (`-v` info, `-vv` debug, `-vvv` trace).
     #[arg(short, long, global = true, action = clap::ArgAction::Count)]
@@ -21,7 +21,7 @@ pub struct Cli {
     pub json: bool,
 
     /// The project root to operate on. Defaults to walking up from the
-    /// current directory looking for `.git` or `projectd.toml`.
+    /// current directory looking for `.git` or `lspd.toml`.
     #[arg(long, global = true, value_name = "PATH")]
     pub project: Option<PathBuf>,
 
@@ -75,17 +75,17 @@ pub enum Command {
     Mcp,
 }
 
-/// `projectd project <...>`.
+/// `lspd project <...>`.
 #[derive(Debug, Subcommand)]
 pub enum ProjectCommand {
     /// The canonical root, detected project types, and configuration sources.
     Info,
-    /// What this ProjectD instance can do for the project (LSPs, events,
+    /// What this LSPD instance can do for the project (LSPs, events,
     /// watch rules, MCP tools) — a machine-discoverable capability summary.
     Capabilities,
 }
 
-/// `projectd lsp <...>`.
+/// `lspd lsp <...>`.
 #[derive(Debug, Subcommand)]
 pub enum LspCommand {
     /// List every known LSP definition and whether it is active.
@@ -113,7 +113,7 @@ pub enum LspCommand {
     },
 }
 
-/// `projectd watch <...>`.
+/// `lspd watch <...>`.
 #[derive(Debug, Subcommand)]
 pub enum WatchCommand {
     /// List configured watch rules and their enabled state.
@@ -130,7 +130,7 @@ pub enum WatchCommand {
     },
 }
 
-/// `projectd task <...>`.
+/// `lspd task <...>`.
 #[derive(Debug, Subcommand)]
 pub enum TaskCommand {
     /// List Mise tasks available in this project.

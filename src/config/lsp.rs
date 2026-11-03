@@ -133,7 +133,7 @@ pub struct LspDefinitionPatch {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub args: Option<Vec<String>>,
     /// Environment variables. May contain `{{ env.* }}` templates, rendered
-    /// in `config::mod` before this leaves ProjectD (spec §6).
+    /// in `config::mod` before this leaves LSPD (spec §6).
     #[serde(default)]
     pub environment: HashMap<String, String>,
     /// Filetypes/languages this definition covers. Deliberately a list: one
@@ -142,14 +142,14 @@ pub struct LspDefinitionPatch {
     pub languages: Option<Vec<String>>,
     /// LSP `initializationOptions`, passed through verbatim to the server's
     /// `initialize` request. Kept as JSON (via [`lsp_types`]'s own
-    /// passthrough shape) rather than a ProjectD-specific structure, per the
+    /// passthrough shape) rather than a LSPD-specific structure, per the
     /// spec's "preserve native LSP terminology" requirement (§5).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub initialization_options: Option<serde_json::Value>,
     /// LSP workspace `settings` (`workspace/configuration`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub settings: Option<serde_json::Value>,
-    /// Client capability overrides merged into ProjectD's default set before
+    /// Client capability overrides merged into LSPD's default set before
     /// `initialize`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<serde_json::Value>,
@@ -221,7 +221,7 @@ impl LspDefinitionPatch {
 }
 
 /// A fully resolved, concrete LSP definition — the effective configuration a
-/// client asking `projectd lsp config <name>` receives (spec §18). Every
+/// client asking `lspd lsp config <name>` receives (spec §18). Every
 /// template has already been rendered by the time this exists.
 #[derive(Debug, Clone, PartialEq, Serialize, schemars::JsonSchema)]
 pub struct ResolvedLspDefinition {
@@ -263,7 +263,7 @@ impl ResolvedLspDefinition {
 /// daemon and `commands::lsp` need a definition's identity for logging.
 #[must_use]
 pub fn describe(root: &std::path::Path, name: &str) -> PathBuf {
-    root.join(".projectd").join(format!("{name}.log"))
+    root.join(".lspd").join(format!("{name}.log"))
 }
 
 #[cfg(test)]

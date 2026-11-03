@@ -1,4 +1,4 @@
-# ADR-0006: projectd resolves templates; clients never do
+# ADR-0006: lspd resolves templates; clients never do
 
 ## Status
 
@@ -29,7 +29,7 @@ MCP server, a future editor integration — ever sees `{{ }}` syntax.
   `EffectiveConfig::render_lsp` — no client-side work, ever, for any
   consumer of `lsp config`.
 - Strict undefined-variable checking means a genuine typo fails loudly at
-  resolution time (surfaced as `projectd::template::render`) instead of
+  resolution time (surfaced as `lspd::template::render`) instead of
   producing a subtly wrong path that only breaks the LSP process it get
   passed to.
 - The context is deliberately small today. Extending it (e.g. exposing

@@ -1,10 +1,10 @@
-# projectd — Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents
+# lspd — Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents
 #
 # Single crate, `[lib]` + `[[bin]]`. The library holds the engine; the binary is
 # a thin CLI over it, so integration tests can exercise either.
 
 [package]
-name = "projectd"
+name = "lspd"
 version = "0.1.0"
 edition = "2024"
 # The MSRV. Checked by a dedicated CI job, which greps this very line — keep it
@@ -14,23 +14,23 @@ rust-version = "1.88"
 license = "MIT"
 authors = ["Axel H. <noirbizarre@gmail.com>"]
 description = "Project-scoped development infrastructure: shared LSPs, filesystem events and MCP for editors and agents"
-repository = "https://github.com/noirbizarre/projectd"
-homepage = "https://noirbizarre.github.io/projectd/"
-documentation = "https://noirbizarre.github.io/projectd/"
+repository = "https://github.com/noirbizarre/lspd"
+homepage = "https://noirbizarre.github.io/lspd/"
+documentation = "https://noirbizarre.github.io/lspd/"
 readme = "README.md"
 keywords = ["lsp", "mcp", "daemon", "devtools", "mise"]
 categories = ["development-tools", "command-line-utilities"]
 # Not published to crates.io. Distribution is through the release assets alone,
-# and `cargo install projectd` would create a second install path that
+# and `cargo install lspd` would create a second install path that
 # nothing tests and nobody updates.
 publish = false
 
 [[bin]]
-name = "projectd"
+name = "lspd"
 path = "src/main.rs"
 
 [lib]
-name = "projectd"
+name = "lspd"
 path = "src/lib.rs"
 
 [profile.release]
@@ -65,9 +65,9 @@ demand = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 
-# --- projectd itself ----------------------------------------------------
+# --- lspd itself --------------------------------------------------------
 #
-# Everything below is projectd's own additions, kept below the template's
+# Everything below is lspd's own additions, kept below the template's
 # marker so `git tpl update` never conflicts with them.
 
 # net/process: Unix sockets + spawning LSP servers with piped stdio.
@@ -75,7 +75,7 @@ serde_json = { version = "1", features = ["preserve_order"] }
 # The rest is what a multi-client, multi-process async daemon needs.
 tokio = { version = "1", features = ["rt-multi-thread", "net", "process", "fs", "io-util", "io-std", "macros", "signal", "sync", "time"] }
 
-# Templating: ProjectD resolves `{{ env.* }}` templates server-side so
+# Templating: LSPD resolves `{{ env.* }}` templates server-side so
 # clients never need their own Jinja engine (spec §6/§18).
 minijinja = "2"
 
@@ -101,7 +101,7 @@ globset = "0.4"
 # fields are validated/typed rather than opaque JSON all the way through.
 lsp-types = "0.97"
 
-# The official Model Context Protocol Rust SDK, used for `projectd mcp serve`.
+# The official Model Context Protocol Rust SDK, used for `lspd mcp serve`.
 rmcp = { version = "3", features = ["server", "macros", "transport-io"] }
 # MCP tool argument/result schemas — the same version rmcp itself pulls in,
 # declared directly since `mcp::tools` derives `JsonSchema` on its own types.

@@ -58,7 +58,7 @@ pub async fn serve(root: ProjectRoot) -> crate::Result<()> {
             &socket_path,
             std::io::Error::new(
                 std::io::ErrorKind::AddrInUse,
-                "a projectd daemon is already running for this project",
+                "an lspd daemon is already running for this project",
             ),
         ));
     }
@@ -66,7 +66,7 @@ pub async fn serve(root: ProjectRoot) -> crate::Result<()> {
 
     let listener =
         UnixListener::bind(&socket_path).map_err(|source| Error::io(&socket_path, source))?;
-    info!(project = %root, socket = %socket_path.display(), "projectd daemon listening");
+    info!(project = %root, socket = %socket_path.display(), "lspd daemon listening");
 
     let sockets_dir = socket::proxy_sockets_dir(root.path());
     lsp_manager::ensure_sockets_dir(&sockets_dir)?;
@@ -96,7 +96,7 @@ pub async fn serve(root: ProjectRoot) -> crate::Result<()> {
     run_accept_loop(&listener, &state).await;
 
     let _ = std::fs::remove_file(&socket_path);
-    info!("projectd daemon shut down");
+    info!("lspd daemon shut down");
     Ok(())
 }
 
@@ -166,7 +166,7 @@ async fn handle_connection(state: Arc<DaemonState>, stream: UnixStream) -> crate
             send(
                 &mut connection,
                 &Response::Error {
-                    code: "projectd::daemon::handshake_required".to_string(),
+                    code: "lspd::daemon::handshake_required".to_string(),
                     message: "the first request on a connection must be a handshake".to_string(),
                 },
             )
@@ -191,7 +191,7 @@ async fn handle_connection(state: Arc<DaemonState>, stream: UnixStream) -> crate
                 send(
                     &mut connection,
                     &Response::Error {
-                        code: "projectd::daemon::malformed_request".to_string(),
+                        code: "lspd::daemon::malformed_request".to_string(),
                         message: error.to_string(),
                     },
                 )
@@ -255,14 +255,14 @@ fn resolve_definition(
     // Re-resolved on every call rather than cached: configuration is cheap
     // to load (a handful of small TOML files) and this guarantees `ensure`
     // always launches with the current configuration, including any edit
-    // made to `projectd.local.toml` since the daemon started.
+    // made to `lspd.local.toml` since the daemon started.
     EffectiveConfig::resolve(root)?.resolve_lsp(name)
 }
 
 fn error_response(error: &crate::Error) -> Response {
     let code = miette::Diagnostic::code(error)
         .map(|c| c.to_string())
-        .unwrap_or_else(|| "projectd::error::unknown".to_string());
+        .unwrap_or_else(|| "lspd::error::unknown".to_string());
     Response::Error {
         code,
         message: error.to_string(),
@@ -303,7 +303,7 @@ async fn stream_events(
                         .is_err()
                 {
                     // The client disconnected — this is the normal way a
-                    // `projectd events` subscription ends.
+                    // `lspd events` subscription ends.
                     return Ok(());
                 }
             }
@@ -327,10 +327,10 @@ fn build_globset(paths: &[String]) -> Option<globset::GlobSet> {
 }
 
 /// Reused by `commands::daemon` to locate the log file a detached daemon was
-/// started with, for `projectd status`-style diagnostics.
+/// started with, for `lspd status`-style diagnostics.
 #[must_use]
 pub fn log_path_for(root: &Path) -> std::path::PathBuf {
-    let dir = directories::ProjectDirs::from("", "", "projectd")
+    let dir = directories::ProjectDirs::from("", "", "lspd")
         .map(|dirs| {
             dirs.state_dir()
                 .unwrap_or_else(|| dirs.cache_dir())

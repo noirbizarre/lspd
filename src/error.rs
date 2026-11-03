@@ -14,14 +14,14 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Everything that can go wrong.
 ///
-/// Diagnostic codes are `projectd::<module>::<kind>`. A code is a public
+/// Diagnostic codes are `lspd::<module>::<kind>`. A code is a public
 /// identifier users grep for, so renaming one is a breaking change.
 #[derive(Debug, Error, Diagnostic)]
 #[non_exhaustive]
 pub enum Error {
     /// Reading or writing a file failed.
     #[error("failed to access `{path}`")]
-    #[diagnostic(code(projectd::error::io))]
+    #[diagnostic(code(lspd::error::io))]
     Io {
         /// The path that could not be accessed.
         path: String,
@@ -33,8 +33,8 @@ pub enum Error {
     /// A configuration layer parsed as invalid TOML.
     #[error("`{path}` is not valid TOML")]
     #[diagnostic(
-        code(projectd::config::invalid_toml),
-        help("check the syntax against the example in projectd's configuration docs")
+        code(lspd::config::invalid_toml),
+        help("check the syntax against the example in lspd's configuration docs")
     )]
     InvalidToml {
         /// The file that failed to parse.
@@ -49,8 +49,8 @@ pub enum Error {
     /// built-in registry.
     #[error("no LSP definition named `{name}`")]
     #[diagnostic(
-        code(projectd::config::unknown_lsp),
-        help("run `projectd lsp list` to see the definitions known in this project")
+        code(lspd::config::unknown_lsp),
+        help("run `lspd lsp list` to see the definitions known in this project")
     )]
     UnknownLsp {
         /// The requested, unresolvable name.
@@ -61,7 +61,7 @@ pub enum Error {
     /// registry and the three configuration layers.
     #[error("LSP definition `{name}` has no command")]
     #[diagnostic(
-        code(projectd::config::missing_command),
+        code(lspd::config::missing_command),
         help("add `command = [...]` to `[lsp.{name}]` in a configuration layer")
     )]
     MissingCommand {
@@ -73,7 +73,7 @@ pub enum Error {
     /// file. Names are how rules merge across layers, so duplicates within
     /// one layer cannot be resolved.
     #[error("watch rule `{name}` is defined twice in `{path}`")]
-    #[diagnostic(code(projectd::config::duplicate_watch_rule))]
+    #[diagnostic(code(lspd::config::duplicate_watch_rule))]
     DuplicateWatchRule {
         /// The rule name repeated.
         name: String,
@@ -84,7 +84,7 @@ pub enum Error {
     /// Rendering a MiniJinja template embedded in the configuration failed.
     #[error("failed to render template `{template}`")]
     #[diagnostic(
-        code(projectd::template::render),
+        code(lspd::template::render),
         help(
             "check the `{{ }}` expression against the fields exposed under `env.*` and `project.*`"
         )
@@ -102,7 +102,7 @@ pub enum Error {
     /// (the binary ran but exited non-zero, or its JSON was unparsable).
     #[error("`mise env` failed for `{root}`")]
     #[diagnostic(
-        code(projectd::mise::env_failed),
+        code(lspd::mise::env_failed),
         help("run `mise env --json` in the project directory to see the underlying error")
     )]
     MiseEnv {
@@ -115,8 +115,8 @@ pub enum Error {
     /// No project root could be resolved from the given starting directory.
     #[error("`{path}` does not exist")]
     #[diagnostic(
-        code(projectd::project::not_found),
-        help("pass an existing directory to `--project`, or run projectd from inside one")
+        code(lspd::project::not_found),
+        help("pass an existing directory to `--project`, or run lspd from inside one")
     )]
     ProjectPathNotFound {
         /// The path that was checked.
@@ -125,12 +125,10 @@ pub enum Error {
 
     /// A control-socket connection completed a handshake that named a
     /// different protocol, or a protocol version this build does not speak.
-    #[error("incompatible projectd protocol: expected `{expected}`, got `{actual}`")]
+    #[error("incompatible lspd protocol: expected `{expected}`, got `{actual}`")]
     #[diagnostic(
-        code(projectd::daemon::protocol_mismatch),
-        help(
-            "the client and daemon were built from different projectd versions; restart the daemon"
-        )
+        code(lspd::daemon::protocol_mismatch),
+        help("the client and daemon were built from different lspd versions; restart the daemon")
     )]
     ProtocolMismatch {
         /// What this build speaks.
@@ -140,10 +138,10 @@ pub enum Error {
     },
 
     /// A daemon could not be reached and could not be started.
-    #[error("no projectd daemon is running for this project, and none could be started")]
+    #[error("no lspd daemon is running for this project, and none could be started")]
     #[diagnostic(
-        code(projectd::daemon::unreachable),
-        help("run `projectd daemon serve` in the foreground to see why it fails to start")
+        code(lspd::daemon::unreachable),
+        help("run `lspd daemon serve` in the foreground to see why it fails to start")
     )]
     DaemonUnreachable {
         /// The underlying connection error.
@@ -153,7 +151,7 @@ pub enum Error {
 
     /// A request was sent to a daemon that returned a structured error frame.
     #[error("{message}")]
-    #[diagnostic(code(projectd::daemon::request_failed))]
+    #[diagnostic(code(lspd::daemon::request_failed))]
     RequestFailed {
         /// The stable machine-readable code the daemon reported.
         code: String,
@@ -166,7 +164,7 @@ pub enum Error {
     /// `docs/adr/0005-single-exclusive-lsp-proxy-client.md`).
     #[error("LSP `{name}` already has an attached client")]
     #[diagnostic(
-        code(projectd::lsp::busy),
+        code(lspd::lsp::busy),
         help("only one client may proxy a given LSP instance at a time in this MVP")
     )]
     LspBusy {
@@ -176,7 +174,7 @@ pub enum Error {
 
     /// Serialising or deserialising a JSON wire message failed.
     #[error("malformed JSON message")]
-    #[diagnostic(code(projectd::daemon::malformed_json))]
+    #[diagnostic(code(lspd::daemon::malformed_json))]
     MalformedJson {
         /// The underlying serde error.
         #[source]

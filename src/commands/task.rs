@@ -1,14 +1,14 @@
-//! `projectd task <...>` — thin delegation to Mise (spec §13: "Do not
+//! `lspd task <...>` — thin delegation to Mise (spec §13: "Do not
 //! reimplement these systems").
 //!
 //! Daemon-independent: task execution has no lifecycle of its own worth a
 //! daemon managing, unlike an LSP process or a persistent watcher.
 
-use projectd::Error;
+use lspd::Error;
 
 use super::Context;
 
-pub async fn list(ctx: &Context) -> projectd::Result<()> {
+pub async fn list(ctx: &Context) -> lspd::Result<()> {
     let mut command = tokio::process::Command::new("mise");
     command.arg("tasks").arg("ls").current_dir(ctx.root.path());
     if ctx.json {
@@ -17,7 +17,7 @@ pub async fn list(ctx: &Context) -> projectd::Result<()> {
     run_inherited(command).await
 }
 
-pub async fn run(ctx: &Context, name: &str, args: Vec<String>) -> projectd::Result<()> {
+pub async fn run(ctx: &Context, name: &str, args: Vec<String>) -> lspd::Result<()> {
     let mut command = tokio::process::Command::new("mise");
     command.arg("run").arg(name).current_dir(ctx.root.path());
     if !args.is_empty() {
@@ -27,11 +27,11 @@ pub async fn run(ctx: &Context, name: &str, args: Vec<String>) -> projectd::Resu
 }
 
 /// Runs `command` with inherited stdio, so a human sees Mise's own output
-/// directly rather than ProjectD re-wrapping it. `--json` is forwarded to
-/// Mise itself for `task list` rather than ProjectD attempting to
+/// directly rather than LSPD re-wrapping it. `--json` is forwarded to
+/// Mise itself for `task list` rather than LSPD attempting to
 /// re-envelope Mise's own JSON shape, which is Mise's contract to keep
-/// stable, not ProjectD's to duplicate.
-async fn run_inherited(mut command: tokio::process::Command) -> projectd::Result<()> {
+/// stable, not LSPD's to duplicate.
+async fn run_inherited(mut command: tokio::process::Command) -> lspd::Result<()> {
     let status = command
         .status()
         .await

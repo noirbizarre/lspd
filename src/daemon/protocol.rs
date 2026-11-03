@@ -5,7 +5,7 @@
 //! client's frames keep parsing against a newer daemon and vice versa —
 //! the same backward-compatibility discipline used for `snypr`'s IPC layer,
 //! justified here by the same reasoning: a daemon and a CLI invocation can
-//! be built from different `projectd` versions on a developer's machine, and
+//! be built from different `lspd` versions on a developer's machine, and
 //! a torn connection over an optional field nobody needed is a worse failure
 //! mode than ignoring it.
 
@@ -109,7 +109,7 @@ pub enum Response {
     /// A structured failure — see [`Request`]'s module docs.
     Error {
         /// A stable, machine-readable diagnostic code, matching
-        /// `error::Error`'s `projectd::<module>::<kind>` convention.
+        /// `error::Error`'s `lspd::<module>::<kind>` convention.
         code: String,
         /// A human-readable explanation.
         message: String,
@@ -232,7 +232,7 @@ mod tests {
             },
             Response::Ack,
             Response::Error {
-                code: "projectd::lsp::busy".into(),
+                code: "lspd::lsp::busy".into(),
                 message: "busy".into(),
             },
         ];
@@ -245,11 +245,11 @@ mod tests {
     #[test]
     fn an_error_response_carries_a_stable_code_and_a_message() {
         let response = Response::Error {
-            code: "projectd::lsp::busy".to_string(),
+            code: "lspd::lsp::busy".to_string(),
             message: "LSP `pyright` already has an attached client".to_string(),
         };
         let json = serde_json::to_string(&response).unwrap();
         let parsed: Response = serde_json::from_str(&json).unwrap();
-        assert!(matches!(parsed, Response::Error { code, .. } if code == "projectd::lsp::busy"));
+        assert!(matches!(parsed, Response::Error { code, .. } if code == "lspd::lsp::busy"));
     }
 }

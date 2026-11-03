@@ -27,7 +27,7 @@ pull_request:
   #   squash_merge_commit_message: BLANK
   title: "chore(release): {{ version }}"
   header: |
-    This PR prepares the next release of projectd.
+    This PR prepares the next release of lspd.
 
     The version bump and changelog were produced by the `prepare-release`
     workflow. Review the changelog, then merge — 🚢 Ship takes it from there.

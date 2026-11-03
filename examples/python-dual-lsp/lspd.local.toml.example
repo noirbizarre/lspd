@@ -1,6 +1,6 @@
-# Rename to `projectd.local.toml` (untracked, per the recommended
+# Rename to `lspd.local.toml` (untracked, per the recommended
 # .gitignore entry) to try a local override: switching pyright out for
-# basedpyright without touching the committed `projectd.toml` at all.
+# basedpyright without touching the committed `lspd.toml` at all.
 
 [lsps]
 enabled = ["basedpyright", "ruff"]

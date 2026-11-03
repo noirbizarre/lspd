@@ -1,10 +1,10 @@
 # Architecture
 
-projectd centralizes project-scoped development infrastructure that editors,
+lspd centralizes project-scoped development infrastructure that editors,
 terminal tools, and AI agents would otherwise each reimplement independently.
 
 ```text
-                    projectd
+                    lspd
                        │
               project-scoped services
                        │
@@ -17,7 +17,7 @@ terminal tools, and AI agents would otherwise each reimplement independently.
                     shared LSPs
 ```
 
-projectd composes existing standards rather than replacing them: LSP remains
+lspd composes existing standards rather than replacing them: LSP remains
 LSP, MCP is an additional agent-facing interface, and [Mise](https://mise.jdx.dev)
 provides tools and environments. See
 [ADR-0007](adr/0007-mise-as-pluggable-environment-provider.md) for why Mise is
@@ -74,7 +74,7 @@ mcp             tool definitions wrapping the same engine functions the CLI uses
 cli / commands  argument parsing and human/JSON output (binary crate only)
 ```
 
-`config` and `mise` are usable without a daemon at all — `projectd lsp config
+`config` and `mise` are usable without a daemon at all — `lspd lsp config
 <name>` resolves the effective configuration in-process. Only genuinely
 stateful concerns (a running LSP process, a persistent filesystem watcher,
 runtime watch-rule toggles) need the daemon. See
@@ -109,7 +109,7 @@ capabilities (see [Protocol](protocol.md)).
 ```text
 filesystem
     ↓
-projectd event stream
+lspd event stream
     ├──→ LSP
     ├──→ Neovim
     ├──→ other IDEs
@@ -117,7 +117,7 @@ projectd event stream
     └──→ watch rules
 ```
 
-projectd emits `file.created` / `file.modified` / `file.deleted` /
+lspd emits `file.created` / `file.modified` / `file.deleted` /
 `file.renamed` events (with atomic renames, not delete+create pairs) to
 every subscriber. Watch rules are just one more subscriber that happens to
 run a command — they do not define the underlying watch mechanism, and
@@ -127,8 +127,8 @@ disabling every watch rule does not stop the event stream. See
 
 ## Non-goals
 
-projectd does not implement package management, tool installation, an
+lspd does not implement package management, tool installation, an
 environment manager, an IDE, an LSP client, or a generic build orchestrator.
 Mise remains the tool/environment provider; a future provider (e.g. Nix)
-would implement the same `EnvironmentProvider` seam without projectd
+would implement the same `EnvironmentProvider` seam without lspd
 reimplementing either.

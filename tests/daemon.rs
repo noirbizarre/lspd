@@ -1,14 +1,14 @@
 //! Integration tests for the daemon's control protocol and LSP proxy,
-//! running `projectd::daemon::serve` in-process (no subprocess spawn) so
+//! running `lspd::daemon::serve` in-process (no subprocess spawn) so
 //! failures are attributable to the protocol itself rather than to process
 //! management. `tests/cli.rs` covers the subprocess discover-or-start path.
 
 use std::path::Path;
 use std::time::Duration;
 
-use projectd::daemon::protocol::{Request, Response};
-use projectd::daemon::{handshake, socket};
-use projectd::project::ProjectRoot;
+use lspd::daemon::protocol::{Request, Response};
+use lspd::daemon::{handshake, socket};
+use lspd::project::ProjectRoot;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::UnixStream;
 use tokio::time::timeout;
@@ -21,7 +21,7 @@ async fn start_daemon(root: &ProjectRoot) {
     let socket_path = socket::control_socket_path(root.path());
     let spawned_root = root.clone();
     tokio::spawn(async move {
-        if let Err(error) = projectd::daemon::serve(spawned_root).await {
+        if let Err(error) = lspd::daemon::serve(spawned_root).await {
             eprintln!("test daemon exited with an error: {error}");
         }
     });
@@ -86,7 +86,7 @@ fn python_project_with_stub_lsp(name: &str, command: &str) -> tempfile::TempDir 
     let tmp = tempfile::TempDir::new().unwrap();
     std::fs::write(tmp.path().join("pyproject.toml"), "").unwrap();
     std::fs::write(
-        tmp.path().join("projectd.toml"),
+        tmp.path().join("lspd.toml"),
         format!(
             r#"
             [lsps]
@@ -144,10 +144,7 @@ async fn ensuring_an_lsp_starts_it_and_reusing_ensure_does_not_start_a_second_pr
         Response::LspEnsured { status, .. } => status,
         other => panic!("expected LspEnsured, got {other:?}"),
     };
-    assert_eq!(
-        first.status,
-        projectd::daemon::lsp_manager::LspStatus::Running
-    );
+    assert_eq!(first.status, lspd::daemon::lsp_manager::LspStatus::Running);
     let pid = first.pid.expect("a running instance has a pid");
 
     send(

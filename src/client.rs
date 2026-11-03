@@ -2,7 +2,7 @@
 //! exchange over the control socket. Shared by `commands::*` (the CLI) and
 //! `mcp::tools` (the MCP server) — both need the exact same "is a daemon
 //! running for this project, and if not, start one" logic, and the spec is
-//! explicit that lifecycle/ownership decisions belong to ProjectD, not to
+//! explicit that lifecycle/ownership decisions belong to LSPD, not to
 //! each client independently.
 
 use std::time::Duration;
@@ -99,7 +99,7 @@ pub async fn read_response(connection: &mut Connection) -> crate::Result<Respons
 #[must_use]
 pub fn unexpected_response(response: Response) -> Error {
     Error::RequestFailed {
-        code: "projectd::daemon::unexpected_response".to_string(),
+        code: "lspd::daemon::unexpected_response".to_string(),
         message: format!("daemon returned an unexpected response: {response:?}"),
     }
 }
@@ -108,7 +108,7 @@ fn spawn_daemon(root: &ProjectRoot) -> crate::Result<()> {
     let exe =
         std::env::current_exe().map_err(|source| Error::io("<current executable>", source))?;
 
-    let log_dir = directories::ProjectDirs::from("", "", "projectd")
+    let log_dir = directories::ProjectDirs::from("", "", "lspd")
         .map(|dirs| {
             dirs.state_dir()
                 .unwrap_or_else(|| dirs.cache_dir())
@@ -138,7 +138,7 @@ fn spawn_daemon(root: &ProjectRoot) -> crate::Result<()> {
             // detached daemon it just started.
             .process_group(0)
             .spawn()
-            .map_err(|source| Error::io("<projectd daemon>", source))?;
+            .map_err(|source| Error::io("<lspd daemon>", source))?;
     }
 
     Ok(())
@@ -159,7 +159,7 @@ async fn wait_for_socket(socket_path: &std::path::Path) -> crate::Result<UnixStr
     }
 }
 
-/// Convenience for `projectd status`: connects only if a daemon is already
+/// Convenience for `lspd status`: connects only if a daemon is already
 /// reachable, without starting one — `status` should never have the side
 /// effect of spawning a daemon just to report that none was running.
 pub async fn try_handshake(root: &ProjectRoot) -> Option<Handshake> {

@@ -5,11 +5,11 @@ ecosystem — the schema never models `language → watcher`, so a monorepo can
 declare as many independent rules as it needs (spec §21).
 
 ```console
-$ projectd watch list
+$ lspd watch list
 * frontend-tests       frontend/**/*.ts
 * backend-tests        backend/**/*.ts
 
-$ projectd watch disable backend-tests
+$ lspd watch disable backend-tests
 backend-tests: disabled
 ```
 

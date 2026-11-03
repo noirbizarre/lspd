@@ -22,7 +22,7 @@ For the MVP, `daemon::lsp_manager` allows exactly one attached client per
 running LSP instance. `lsp_manager::run_proxy` tracks an `attached` flag per
 instance; a second concurrent connection to the same proxy socket is closed
 immediately rather than queued, error-framed, or multiplexed. Ownership of
-*when* to start/stop the process still belongs to projectd (spec's
+*when* to start/stop the process still belongs to lspd (spec's
 requirement); only simultaneous *use* by multiple clients is out of scope.
 
 ## Consequences

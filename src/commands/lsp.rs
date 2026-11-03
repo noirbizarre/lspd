@@ -1,4 +1,4 @@
-//! `projectd lsp <...>`.
+//! `lspd lsp <...>`.
 //!
 //! `list` and `config` are daemon-independent (pure configuration
 //! resolution); `status`, `ensure` and `endpoint` need a live daemon since
@@ -7,11 +7,11 @@
 
 use serde::Serialize;
 
-use projectd::config::EffectiveConfig;
-use projectd::daemon::protocol::{Request, Response};
+use lspd::config::EffectiveConfig;
+use lspd::daemon::protocol::{Request, Response};
 
 use super::Context;
-use projectd::client;
+use lspd::client;
 
 #[derive(Debug, Serialize)]
 struct LspSummary {
@@ -22,7 +22,7 @@ struct LspSummary {
     error: Option<String>,
 }
 
-pub fn list(ctx: &Context) -> projectd::Result<()> {
+pub fn list(ctx: &Context) -> lspd::Result<()> {
     let config = EffectiveConfig::resolve(&ctx.root)?;
 
     let summaries: Vec<LspSummary> = config
@@ -65,7 +65,7 @@ pub fn list(ctx: &Context) -> projectd::Result<()> {
     Ok(())
 }
 
-pub fn config(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub fn config(ctx: &Context, name: &str) -> lspd::Result<()> {
     let config = EffectiveConfig::resolve(&ctx.root)?;
     let resolved = config.resolve_lsp(name)?;
 
@@ -100,7 +100,7 @@ pub fn config(ctx: &Context, name: &str) -> projectd::Result<()> {
     Ok(())
 }
 
-pub async fn status(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub async fn status(ctx: &Context, name: &str) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     let response = client::request(
         &mut conn,
@@ -122,7 +122,7 @@ pub async fn status(ctx: &Context, name: &str) -> projectd::Result<()> {
     }
 }
 
-pub async fn ensure(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub async fn ensure(ctx: &Context, name: &str) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     let response = client::request(
         &mut conn,
@@ -144,7 +144,7 @@ pub async fn ensure(ctx: &Context, name: &str) -> projectd::Result<()> {
     }
 }
 
-pub async fn endpoint(ctx: &Context, name: &str) -> projectd::Result<()> {
+pub async fn endpoint(ctx: &Context, name: &str) -> lspd::Result<()> {
     let mut conn = client::discover_or_start(&ctx.root).await?;
     let response = client::request(
         &mut conn,

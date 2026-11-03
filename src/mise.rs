@@ -1,9 +1,9 @@
 //! The Mise environment provider (spec §13).
 //!
-//! Mise is a provider/implementation detail, not part of the ProjectD
+//! Mise is a provider/implementation detail, not part of the LSPD
 //! protocol: `EnvironmentProvider` is the seam a future Nix provider would
 //! implement (`docs/adr/0007-mise-as-pluggable-environment-provider.md`).
-//! ProjectD never reimplements tool installation or version management —
+//! LSPD never reimplements tool installation or version management —
 //! it only consumes whatever environment `mise env` reports.
 
 use std::collections::HashMap;
@@ -18,7 +18,7 @@ pub trait EnvironmentProvider {
     /// Resolves the effective environment for `root`. Implementations should
     /// prefer returning a best-effort environment (e.g. falling back to
     /// `std::env::vars()`) over failing outright: a missing/broken provider
-    /// must not make ProjectD unusable in a project that does not need it.
+    /// must not make LSPD unusable in a project that does not need it.
     fn resolve(&self, root: &Path) -> HashMap<String, String>;
 }
 
@@ -46,7 +46,7 @@ impl EnvironmentProvider for MiseProvider {
     }
 }
 
-/// Injects the one variable ProjectD itself owns: `PROJECT_ROOT`. Applied
+/// Injects the one variable LSPD itself owns: `PROJECT_ROOT`. Applied
 /// after any provider runs, so neither Mise nor the OS environment can
 /// shadow it — templates must be able to rely on it unconditionally
 /// (spec §6's example, `{{ env.PROJECT_ROOT }}/src`).
