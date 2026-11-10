@@ -77,7 +77,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "net", "process", "fs", 
 
 # Templating: LSPD resolves `{{ env.* }}` templates server-side so
 # clients never need their own Jinja engine (spec §6/§18).
-minijinja = "2"
+minijinja = "3"
 
 # Filesystem watching: cross-platform (inotify/FSEvents/...) abstraction plus
 # save-as-rename debouncing, so editors' atomic saves emit one event, not three.
