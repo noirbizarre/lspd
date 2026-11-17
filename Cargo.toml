@@ -118,7 +118,7 @@ uuid = { version = "1", features = ["v4", "serde"] }
 # Deterministic Unix socket path derivation from a canonical project root
 # (see docs/adr/0004-deterministic-socket-discovery.md) — discovery is a
 # pure function of the root, not a lookup table.
-sha2 = "0.10"
+sha2 = "0.11"
 
 async-trait = "0.1"
 
