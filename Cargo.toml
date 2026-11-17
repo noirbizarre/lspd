@@ -131,7 +131,7 @@ assert_cmd = "2"
 predicates = "3"
 tempfile = "3"
 insta = { version = "1", features = ["filters"] }
-rstest = "0.26"
+rstest = "0.28"
 pretty_assertions = "1"
 # The MCP integration tests act as an MCP client over an in-memory duplex
 # transport, which needs rmcp's "client" feature (not needed by the binary
